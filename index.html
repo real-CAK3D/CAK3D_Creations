@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>CAK3D_Creations</title>
 <meta name="description" content="Signals, systems & side-quests from CAK3D — a maker who drives for data. Home of Flying Flocks and more field-built tools." />
-<meta name="theme-color" content="#060910" />
+<meta name="theme-color" content="#070c08" />
 <meta property="og:title" content="CAK3D_Creations" />
 <meta property="og:description" content="Signals, systems & side-quests from CAK3D. Home of Flying Flocks and more." />
 <meta property="og:type" content="website" />
@@ -14,9 +14,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
 <style>
   :root{
-    --bg:#060910; --panel:#0c111c; --panel2:#0a0f18; --ink:#e8eef7; --muted:#8a97ad;
-    --cyan:#22d3ee; --mag:#ff3d9a; --green:#34d399; --amber:#f59e0b; --violet:#a78bfa;
-    --line:rgba(120,160,200,.14);
+    /* Earthy terminal-green palette — campfire + woods + phosphor. The old cyan/magenta
+       tokens are re-pointed at greens/embers so the whole site shifts at once. */
+    --bg:#070c08; --panel:#0e140d; --panel2:#0b110a; --ink:#e7f0e2; --muted:#8fa189;
+    --cyan:#5fd36a;   /* phosphor green (primary) */
+    --mag:#e8873a;    /* ember / campfire (secondary) */
+    --green:#86efac;  /* fresh leaf */
+    --amber:#f0b429;  /* firelight */
+    --violet:#9bbf6a; /* moss */
+    --ember:#ff6a3d; --bark:#9a7b53; --star:#ffe7a3; --fern:#3fa34d;
+    --line:rgba(120,170,110,.15);
     --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
     --disp:'Space Grotesk',system-ui,sans-serif;
   }
@@ -56,7 +63,7 @@
   .btn{font-family:var(--mono);font-size:14px;font-weight:700;padding:13px 22px;border-radius:12px;
     border:1px solid var(--line);background:var(--panel);transition:.15s;display:inline-flex;align-items:center;gap:8px}
   .btn:hover{transform:translateY(-2px)}
-  .btn.primary{background:linear-gradient(90deg,var(--cyan),var(--mag));color:#05070c;border:none;box-shadow:0 0 30px rgba(34,211,238,.25)}
+  .btn.primary{background:linear-gradient(90deg,var(--fern),var(--amber));color:#06100a;border:none;box-shadow:0 0 30px rgba(95,211,106,.28)}
   .btn.ghost:hover{border-color:var(--cyan);color:var(--cyan)}
 
   .stripe{display:flex;gap:26px;justify-content:center;flex-wrap:wrap;margin-top:34px;
@@ -124,8 +131,7 @@
 <header><div class="wrap"><nav>
   <div class="logo"><b>CAK3D</b>_<i>Creations</i></div>
   <div class="navlinks">
-    <a href="#flyingflocks">Flying Flocks</a>
-    <a href="#creations">Creations</a>
+    <a href="#creations">Builds</a>
     <a href="#about">About</a>
     <a href="https://github.com/real-CAK3D" target="_blank" rel="noopener">GitHub ↗</a>
   </div>
@@ -134,48 +140,21 @@
 <main class="wrap">
 
   <div class="hero">
-    <div class="kicker mono">// FIELD-BUILT TOOLS · SIGNALS · SYSTEMS</div>
+    <div class="kicker mono">// TRAILS · SIGNALS · FIRESIDE CODE</div>
     <h1>CAK3D<span class="c">_</span><span class="m">CREATIONS</span></h1>
-    <p class="tagline">Signals, systems &amp; side-quests from a maker who drives for data.</p>
-    <p class="sub">Hardware that solders on the bench and apps that run in the car. This is where the builds live.</p>
+    <p class="tagline">Field-built tools from a maker who codes in the woods and drives for data.</p>
+    <p class="sub">Soldering irons and campfires, radios and trailheads. Every build lands here — grab whichever one you need.</p>
     <div class="cta">
-      <a class="btn primary" href="#flyingflocks">▸ Explore Flying Flocks</a>
+      <a class="btn primary" href="#creations">▸ Browse the builds</a>
       <a class="btn ghost" href="https://github.com/real-CAK3D" target="_blank" rel="noopener">⌁ GitHub</a>
     </div>
     <div class="stripe mono">
       <span><b>RF</b> signal intelligence</span>
-      <span><b>ESP32-C5</b> + CC1101 nodes</span>
-      <span><b>Meshtastic</b> mesh</span>
-      <span><b>Android</b> field apps</span>
+      <span><b>ESP32</b> firmware</span>
+      <span><b>trail</b> + field kit</span>
+      <span><b>Android</b> &amp; web apps</span>
     </div>
   </div>
-
-  <section id="flyingflocks">
-    <div class="eyebrow mono">// FEATURED BUILD</div>
-    <h2>The flagship in the field</h2>
-    <p class="lead">A wardriving cyber-deck for your pocket — scan the air around you, map it, and pull it apart in the lab.</p>
-
-    <div class="feature"><div class="feat-body">
-      <span class="badge">● BETA · ANDROID</span>
-      <div class="feat-title"><span class="f">Flying</span> Flocks</div>
-      <p class="feat-desc">Drive and the invisible lights up: Wi-Fi, Bluetooth and sub-GHz radio, cameras, mesh nodes and aircraft — mapped live, scored, and taken apart. Built around a fleet of ESP32-C5 "Biscuit" boards with a CC1101 sub-GHz antenna, and it works on just the phone too.</p>
-      <div class="chips">
-        <span class="chip"><span class="dot" style="background:var(--cyan)"></span>Wi-Fi · 2.4 &amp; 5 GHz</span>
-        <span class="chip"><span class="dot" style="background:var(--violet)"></span>Bluetooth LE</span>
-        <span class="chip"><span class="dot" style="background:var(--amber)"></span>Sub-GHz · 315/433/868/915</span>
-        <span class="chip"><span class="dot" style="background:var(--green)"></span>Live map &amp; trail</span>
-        <span class="chip"><span class="dot" style="background:var(--cyan)"></span>GPS satellites</span>
-        <span class="chip"><span class="dot" style="background:var(--mag)"></span>Aircraft · live ADS-B</span>
-        <span class="chip"><span class="dot" style="background:var(--violet)"></span>Spectrum &amp; channels</span>
-        <span class="chip"><span class="dot" style="background:var(--amber)"></span>Lab bench</span>
-        <span class="chip"><span class="dot" style="background:var(--green)"></span>Dead-zone privacy</span>
-      </div>
-      <div class="cta" style="justify-content:flex-start">
-        <a class="btn primary" href="https://github.com/real-CAK3D/FlyingFlocks/releases" target="_blank" rel="noopener">⇩ Download APK</a>
-        <a class="btn ghost" href="https://github.com/real-CAK3D/FlyingFlocks" target="_blank" rel="noopener">Source ↗</a>
-      </div>
-    </div></div>
-  </section>
 
   <section id="creations">
     <div class="eyebrow mono">// THE WORKBENCH</div>
@@ -189,9 +168,9 @@
     <div class="eyebrow mono">// OPERATOR</div>
     <h2>Who's behind the bench</h2>
     <div class="about">
-      <p>CAK3D builds tools for the signals nobody else is looking at. Weeknights it's a soldering iron and an ESP32; weekends it's a drive with the radios running, harvesting the air into a map. The work leans cyberpunk and a little gamified — leaderboards, territory, badges — because data is more fun when it's a game.</p>
-      <p>Everything here is field-tested: if it can't survive a real drive, it doesn't ship.</p>
-      <div class="sig mono">— ꧁ᙅᗣҜӠᙃ꧂ · team CAK3D · US</div>
+      <p>CAK3D builds tools for the signals nobody else is looking at. Weeknights it's a soldering iron and an ESP32; weekends it's a trail with the radios running, or a laptop by the fire turning the woods into data. The work leans terminal-green and a little gamified — leaderboards, territory, badges — because the field is more fun when it's a game.</p>
+      <p>Everything here is field-tested: if it can't survive a real drive or a night in the pack, it doesn't ship.</p>
+      <div class="sig mono">— ꧁ᙅᗣҜӠᙃ꧂ · team CAK3D · out in the field</div>
     </div>
   </section>
 
@@ -201,16 +180,25 @@
   <span>© 2026 CAK3D_Creations</span>
   <span>
     <a href="https://github.com/real-CAK3D" target="_blank" rel="noopener">GitHub</a> ·
-    <a href="#flyingflocks">Flying Flocks</a>
+    <a href="#creations">Builds</a>
   </span>
 </div></footer>
 
 <script>
-// Signal-field background: drifting pings + faint mesh lines + a slow baseline wave.
+// Living woods: starfield + pine treeline + a flickering campfire with rising embers,
+// over the old signal-field (fireflies, mesh lines, a phosphor baseline wave).
 (function(){
   const c = document.getElementById('bg'), x = c.getContext('2d');
-  let W,H,dots,t=0;
-  const COLORS=['#22d3ee','#ff3d9a','#34d399','#a78bfa'];
+  let W,H,dots,stars,trees,embers,fire,t=0;
+  // Fireflies & phosphor: leaf-greens, embers and starlight drifting over the woods.
+  const COLORS=['#5fd36a','#86efac','#e8873a','#ffe7a3','#3fa34d'];
+  const D=()=>devicePixelRatio;
+  function newEmber(){
+    const fx=fire?fire.x:W*0.14, fy=fire?fire.y:H;
+    return {x:fx+(Math.random()-.5)*16*D(), y:fy-Math.random()*18*D(),
+      vx:(Math.random()-.5)*0.3*D(), vy:-(0.3+Math.random()*0.8)*D(),
+      life:0.6+Math.random()*0.4, r:(Math.random()*1.3+.5)*D()};
+  }
   function size(){ const cw=document.documentElement.clientWidth, ch=document.documentElement.clientHeight; W=c.width=cw*devicePixelRatio; H=c.height=ch*devicePixelRatio; seed(); }
   function seed(){
     const n = Math.min(90, Math.floor(W*H/26000));
@@ -220,11 +208,30 @@
       r:(Math.random()*1.6+.6)*devicePixelRatio, col:COLORS[(Math.random()*COLORS.length)|0],
       ph:Math.random()*Math.PI*2
     });
+    // stars in the upper sky
+    stars=[]; const sn=Math.min(80, Math.floor(W/(24*devicePixelRatio)));
+    for(let i=0;i<sn;i++) stars.push({x:Math.random()*W, y:Math.random()*H*0.5,
+      ph:Math.random()*6.28, r:(Math.random()*1.1+.4)*devicePixelRatio});
+    // pine treeline along the bottom, back layer first for depth
+    trees=[]; let tx=-20*devicePixelRatio;
+    while(tx<W+30*devicePixelRatio){
+      const w=(26+Math.random()*30)*devicePixelRatio, h=(55+Math.random()*95)*devicePixelRatio;
+      trees.push({x:tx, w, h, back:Math.random()<0.5}); tx+=w*0.6;
+    }
+    trees.sort((a,b)=>Number(b.back)-Number(a.back));
+    // campfire down in the left gutter
+    fire={x:W*0.13, y:H-14*devicePixelRatio};
+    embers=[]; for(let i=0;i<24;i++){ const e=newEmber(); e.life=Math.random(); embers.push(e); }
   }
   function frame(){
+    const dpr=devicePixelRatio;
     t+=0.012; x.clearRect(0,0,W,H);
+    // starfield (twinkle)
+    for(const s of stars){ const tw=.35+.65*(Math.sin(t*1.5+s.ph)*.5+.5);
+      x.globalAlpha=tw*.8; x.fillStyle='#ffe7a3'; x.beginPath(); x.arc(s.x,s.y,s.r,0,7); x.fill(); }
+    x.globalAlpha=1;
     // baseline waveform
-    x.globalAlpha=.16; x.strokeStyle='#22d3ee'; x.lineWidth=1.2*devicePixelRatio; x.beginPath();
+    x.globalAlpha=.16; x.strokeStyle='#5fd36a'; x.lineWidth=1.2*devicePixelRatio; x.beginPath();
     for(let i=0;i<=W;i+=6*devicePixelRatio){
       const y=H*0.62 + Math.sin(i*0.004+t)*10*devicePixelRatio + Math.sin(i*0.013-t*1.6)*6*devicePixelRatio;
       i===0?x.moveTo(i,y):x.lineTo(i,y);
@@ -232,7 +239,7 @@
     // mesh lines
     for(let i=0;i<dots.length;i++){ for(let j=i+1;j<dots.length;j++){
       const a=dots[i],b=dots[j],dx=a.px-b.px,dy=a.py-b.py,d=Math.hypot(dx,dy),lim=120*devicePixelRatio;
-      if(d<lim){ x.globalAlpha=(1-d/lim)*.12; x.strokeStyle='#6ea8c8'; x.lineWidth=devicePixelRatio; x.beginPath(); x.moveTo(a.px,a.py); x.lineTo(b.px,b.py); x.stroke(); }
+      if(d<lim){ x.globalAlpha=(1-d/lim)*.12; x.strokeStyle='#6ea86e'; x.lineWidth=devicePixelRatio; x.beginPath(); x.moveTo(a.px,a.py); x.lineTo(b.px,b.py); x.stroke(); }
     }}
     x.globalAlpha=1;
     // pings
@@ -244,7 +251,35 @@
       x.beginPath(); x.arc(p.px,p.py,p.r+pulse*1.4*devicePixelRatio,0,7); x.fill();
       x.globalAlpha=.08; x.beginPath(); x.arc(p.px,p.py,(p.r+pulse*1.4*devicePixelRatio)*3.2,0,7); x.fill();
     }
-    x.globalAlpha=1; requestAnimationFrame(frame);
+    x.globalAlpha=1;
+
+    // --- foreground woods scene ---
+    // pine treeline (two depth shades)
+    for(const tr of trees){
+      x.fillStyle = tr.back ? '#0c160c' : '#071006';
+      x.beginPath(); x.moveTo(tr.x, H); x.lineTo(tr.x+tr.w/2, H-tr.h); x.lineTo(tr.x+tr.w, H); x.closePath(); x.fill();
+    }
+    // campfire — flickering warm glow, logs, flames
+    const flick = (Math.sin(t*9)*.5+.5)*.4 + (Math.sin(t*23+1)*.5+.5)*.2 + .4;
+    const g = x.createRadialGradient(fire.x, fire.y, 0, fire.x, fire.y, 150*dpr*flick);
+    g.addColorStop(0, 'rgba(255,150,60,'+(0.20*flick)+')'); g.addColorStop(1, 'rgba(255,150,60,0)');
+    x.fillStyle = g; x.fillRect(fire.x-170*dpr, fire.y-170*dpr, 340*dpr, 210*dpr);
+    x.strokeStyle='#5a3d28'; x.lineWidth=4*dpr; x.lineCap='round';
+    x.beginPath(); x.moveTo(fire.x-15*dpr,fire.y); x.lineTo(fire.x+15*dpr,fire.y-6*dpr);
+    x.moveTo(fire.x-15*dpr,fire.y-6*dpr); x.lineTo(fire.x+15*dpr,fire.y); x.stroke();
+    const flame=['#ff9a3d','#ff6a3d','#f0b429'];
+    for(let f=0; f<3; f++){ const fh=(16+f*7)*dpr*(0.7+flick*0.6), fw=(8-f*1.8)*dpr, sway=Math.sin(t*7+f)*3*dpr;
+      x.globalAlpha=.85; x.fillStyle=flame[f]; x.beginPath();
+      x.moveTo(fire.x-fw+sway, fire.y-4*dpr);
+      x.quadraticCurveTo(fire.x+sway, fire.y-fh*1.5, fire.x+fw+sway, fire.y-4*dpr); x.closePath(); x.fill(); }
+    x.globalAlpha=1;
+    // rising embers
+    for(const e of embers){ e.x+=e.vx; e.y+=e.vy; e.vx+=(Math.random()-.5)*0.05*dpr; e.life-=0.006;
+      if(e.life<=0 || e.y<H*0.42){ Object.assign(e, newEmber()); }
+      x.globalAlpha=Math.max(0,e.life)*.85; x.fillStyle=(e.life>0.6)?'#f0b429':'#ff6a3d';
+      x.beginPath(); x.arc(e.x,e.y,e.r,0,7); x.fill(); }
+    x.globalAlpha=1;
+    requestAnimationFrame(frame);
   }
   addEventListener('resize',size); size(); frame();
 })();
@@ -254,14 +289,17 @@
 // Project catalog — data-driven so new builds are a one-line add.
 (function(){
   const PF={
-    web:    {l:'Web',          c:'#22d3ee'},
-    android:{l:'Android',      c:'#34d399'},
-    windows:{l:'Windows',      c:'#7c9cff'},
-    pi:     {l:'Raspberry Pi', c:'#ff3d9a'},
-    esp32:  {l:'ESP32',        c:'#f59e0b'},
+    web:    {l:'Web',          c:'#5bc8b0'},
+    android:{l:'Android',      c:'#86efac'},
+    windows:{l:'Windows',      c:'#c0a978'},
+    pi:     {l:'Raspberry Pi', c:'#e0795f'},
+    esp32:  {l:'ESP32',        c:'#f0b429'},
   };
   const R='https://github.com/real-CAK3D/';
   const PROJECTS=[
+    {name:'Flying Flocks', k:'WARDRIVE · RF', pf:['android','esp32'],
+     desc:'Drive and the invisible lights up — Wi-Fi, Bluetooth, sub-GHz, cameras, mesh and aircraft, mapped live and scored. Runs on a fleet of ESP32-C5 "Biscuit" boards or just the phone.',
+     links:[{t:'Download APK',u:R+'FlyingFlocks/releases/latest',go:1},{t:'Source',u:R+'FlyingFlocks'}]},
     {name:'Shelf & Stock', k:'KITCHEN · INVENTORY', pf:['web','android'],
      desc:'Your whole kitchen in your pocket — every cabinet, the fridge and the garage, a smart shopping list, meal planning, and recipes from what you already have.',
      links:[{t:'Open',u:'https://shelfandstock.vercel.app',go:1},{t:'APK',u:R+'ShelfandStock/releases/latest'},{t:'Source',u:R+'ShelfandStock'}]},
@@ -304,9 +342,6 @@
     {name:'NeuroLab', k:'DASHBOARD · SIM', pf:['web'],
      desc:'A browser mission-control dashboard for a living clean-room facility simulation — persistent state and live snapshots.',
      links:[{t:'Source',u:R+'NeuroLab'}]},
-    {name:'Biscuit Mesh', k:'HARDWARE · FIRMWARE', pf:['esp32','android'],
-     desc:'The XIAO ESP32-C5 fleet behind Flying Flocks — dual-band Wi-Fi + CC1101 sub-GHz "Biscuit" nodes that feed the map.',
-     links:[{t:'Releases',u:R+'FlyingFlocks/releases'},{t:'Source',u:R+'FlyingFlocks'}]},
   ];
   const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const pill=k=>{const m=PF[k];return `<span class="pf" style="color:${m.c};border-color:${m.c}55"><i style="background:${m.c}"></i>${m.l}</span>`};
