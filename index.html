@@ -92,6 +92,19 @@
   .card.soon .tag{color:var(--muted)}
   .card h3{margin:8px 0 6px;font-size:19px}
   .card p{margin:0;color:var(--muted);font-size:14px}
+  .card{display:flex;flex-direction:column}
+  .card h3 .k{display:block;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--amber);margin-bottom:4px}
+  .pfs{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 10px}
+  .pf{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;font-weight:700;
+    letter-spacing:.3px;padding:3px 9px;border-radius:999px;border:1px solid var(--line);white-space:nowrap}
+  .pf i{width:7px;height:7px;border-radius:50%;display:inline-block}
+  .card .desc{margin:0 0 15px;color:var(--muted);font-size:14px}
+  .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto}
+  .alink{font-family:var(--mono);font-size:12px;font-weight:700;padding:7px 12px;border-radius:9px;
+    border:1px solid var(--line);background:rgba(255,255,255,.02);transition:.15s;color:var(--ink)}
+  .alink:hover{border-color:var(--cyan);color:var(--cyan)}
+  .alink.go{background:linear-gradient(90deg,var(--cyan),var(--mag));color:#05070c;border:none}
+  .legend{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:18px;font-family:var(--mono);font-size:12px;color:var(--muted)}
 
   .about{border:1px solid var(--line);border-radius:20px;padding:28px;background:var(--panel);margin-top:22px}
   .about p{color:var(--ink);max-width:720px}
@@ -163,25 +176,10 @@
 
   <section id="creations">
     <div class="eyebrow mono">// THE WORKBENCH</div>
-    <h2>More creations</h2>
-    <p class="lead">Everything CAK3D builds, gathering here over time. More coming online.</p>
-    <div class="grid">
-      <div class="card">
-        <div class="tag mono">HARDWARE · FIRMWARE</div>
-        <h3>Biscuit Mesh</h3>
-        <p>XIAO ESP32-C5 fleet — dual-band Wi-Fi + CC1101 sub-GHz "Biscuit" nodes that feed the map.</p>
-      </div>
-      <div class="card soon">
-        <div class="tag mono">SOON</div>
-        <h3>The Portal</h3>
-        <p>Territory, leveling and a live map of everyone in the field — the online side of the flock.</p>
-      </div>
-      <div class="card soon">
-        <div class="tag mono">SOON</div>
-        <h3>More builds</h3>
-        <p>Side-quests from the bench. If it has a radio, a sensor or a screen, it probably ends up here.</p>
-      </div>
-    </div>
+    <h2>The whole workshop</h2>
+    <p class="lead">Every build CAK3D ships — field apps, device firmware, 3D worlds and dashboards — each tagged by where it runs and how to get it.</p>
+    <div class="legend mono" id="legend"></div>
+    <div class="grid" id="grid"></div>
   </section>
 
   <section id="about">
@@ -246,6 +244,76 @@
     x.globalAlpha=1; requestAnimationFrame(frame);
   }
   addEventListener('resize',size); size(); frame();
+})();
+</script>
+
+<script>
+// Project catalog — data-driven so new builds are a one-line add.
+(function(){
+  const PF={
+    web:    {l:'Web',          c:'#22d3ee'},
+    android:{l:'Android',      c:'#34d399'},
+    windows:{l:'Windows',      c:'#7c9cff'},
+    pi:     {l:'Raspberry Pi', c:'#ff3d9a'},
+    esp32:  {l:'ESP32',        c:'#f59e0b'},
+  };
+  const R='https://github.com/real-CAK3D/';
+  const PROJECTS=[
+    {name:'Shelf & Stock', k:'KITCHEN · INVENTORY', pf:['web','android'],
+     desc:'Your whole kitchen in your pocket — every cabinet, the fridge and the garage, a smart shopping list, meal planning, and recipes from what you already have.',
+     links:[{t:'Open',u:'https://shelfandstock.vercel.app',go:1},{t:'APK',u:R+'ShelfandStock/releases/latest'},{t:'Source',u:R+'ShelfandStock'}]},
+    {name:'Home Inventory', k:'FAMILY · STORAGE', pf:['web','android'],
+     desc:'Find any box on the shelf: photograph the whole storage wall, then "blender → Section 7 › Box 41" and it lights up on a map of the shelves.',
+     links:[{t:'Open',u:'https://home-inventory-37.vercel.app',go:1},{t:'APK',u:R+'HomeInventory/releases/latest'},{t:'Source',u:R+'HomeInventory'}]},
+    {name:'MapPI3', k:'TRAIL · NAV', pf:['android','web','pi'],
+     desc:'A phone-first trail companion — plan, launch and navigate hikes with offline route packs and OSM trail geometry, headed for a Raspberry Pi field kit.',
+     links:[{t:'APK',u:R+'MapPI3/releases/latest',go:1},{t:'Source',u:R+'MapPI3'}]},
+    {name:'What the Flock!', k:'SURVEILLANCE · DETECT', pf:['android','web','esp32'],
+     desc:'Spot Flock Safety plate cameras on the road — detector firmware on a XIAO ESP32-S3 plus a phone app with camera-aware navigation.',
+     links:[{t:'APK',u:R+'WhatTheFlock/releases/latest',go:1},{t:'Source',u:R+'WhatTheFlock'}]},
+    {name:'GTA-Watch', k:'WEARABLE · FIRMWARE', pf:['esp32','android'],
+     desc:'A GTA-style minimap and turn-by-turn watch on an ESP32-S3 AMOLED, with an Android companion app.',
+     links:[{t:'Download',u:R+'ESP-Watch/releases/latest',go:1},{t:'Source',u:R+'ESP-Watch'}]},
+    {name:'Hu-Motian', k:'SENSOR · 3D', pf:['web','esp32'],
+     desc:'A human radar: an ESP32 + 24 GHz mmWave sensor with a live 3D room where jointed figures walk, sit and lie down where it senses you.',
+     links:[{t:'Open',u:'https://hu-motian.vercel.app',go:1},{t:'Firmware',u:R+'Hu-Motian/releases/latest'},{t:'Source',u:R+'Hu-Motian'}]},
+    {name:'NostalgiaVue', k:'RETRO · MEDIA', pf:['web','windows'],
+     desc:'A 1980s–2000s TV set in your browser — remote, channel guide, static and 770+ channels surfing archive.org, YouTube and your own clips.',
+     links:[{t:'Watch',u:'https://nostalgiavue.vercel.app',go:1},{t:'Windows app',u:R+'NostalgiaVue/releases/latest'},{t:'Source',u:R+'NostalgiaVue'}]},
+    {name:'Spac3-Gh0st', k:'RASPBERRY PI · RF', pf:['pi','web'],
+     desc:'A windowed Pi hacker-companion with a Pwnagotchi-style face — passive Wi-Fi/BT/LAN awareness and a 10-theme glass dashboard for your own lab.',
+     links:[{t:'Release',u:R+'Spac3-Gh0st/releases/latest',go:1},{t:'Source',u:R+'Spac3-Gh0st'}]},
+    {name:'TorqueClock', k:'SHOP · TIMER', pf:['android','web'],
+     desc:'A phone-first mechanic shift and job timer — clock jobs, tally the day, and keep the shop running on time.',
+     links:[{t:'APK',u:R+'Torque-Timer/releases/latest',go:1},{t:'Source',u:R+'Torque-Timer'}]},
+    {name:'Platform of Things', k:'3D · PORTFOLIO', pf:['web'],
+     desc:"A first-person 3D portfolio world — walk through CAK3D's bots, servers, apps, the garage and the trail, each its own little place.",
+     links:[{t:'Enter',u:'https://real-cak3d.github.io/',go:1},{t:'Source',u:R+'platform-of-things'}]},
+    {name:'Tiny Truck', k:'3D · DRIVING', pf:['web'],
+     desc:"Drive a little truck around a 3D world of CAK3D's work — physics, dust, and big name-letters in the landing zone.",
+     links:[{t:'Drive',u:'https://cak3d-truck.vercel.app',go:1},{t:'Source',u:R+'tiny-truck'}]},
+    {name:'3D PC', k:'3D · INTERACTIVE', pf:['web'],
+     desc:'An explorable 3D computer — boot it up, sit at the desk and poke around the machine.',
+     links:[{t:'Source',u:R+'3D-PC'}]},
+    {name:'The Corner Chronicle', k:'NEWS · PWA', pf:['web'],
+     desc:'A newsstand on your home screen — every paper on the rack with its own cover and an unread badge, ringing when a new issue lands.',
+     links:[{t:'Source',u:R+'NewsStand'}]},
+    {name:'NeuroLab', k:'DASHBOARD · SIM', pf:['web'],
+     desc:'A browser mission-control dashboard for a living clean-room facility simulation — persistent state and live snapshots.',
+     links:[{t:'Source',u:R+'NeuroLab'}]},
+    {name:'Biscuit Mesh', k:'HARDWARE · FIRMWARE', pf:['esp32','android'],
+     desc:'The XIAO ESP32-C5 fleet behind Flying Flocks — dual-band Wi-Fi + CC1101 sub-GHz "Biscuit" nodes that feed the map.',
+     links:[{t:'Releases',u:R+'FlyingFlocks/releases'},{t:'Source',u:R+'FlyingFlocks'}]},
+  ];
+  const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const pill=k=>{const m=PF[k];return `<span class="pf" style="color:${m.c};border-color:${m.c}55"><i style="background:${m.c}"></i>${m.l}</span>`};
+  document.getElementById('grid').innerHTML=PROJECTS.map(p=>{
+    const pfs=p.pf.map(pill).join('');
+    const acts=p.links.map(l=>`<a class="alink${l.go?' go':''}" href="${l.u}" target="_blank" rel="noopener">${esc(l.t)}</a>`).join('');
+    return `<div class="card"><h3><span class="k">${esc(p.k)}</span>${esc(p.name)}</h3><div class="pfs">${pfs}</div><p class="desc">${esc(p.desc)}</p><div class="acts">${acts}</div></div>`;
+  }).join('');
+  document.getElementById('legend').innerHTML='<span>Runs on:</span> '+Object.keys(PF).map(pill).join('')
+    +' <span>· Web runs in any phone or desktop browser, iPhone included.</span>';
 })();
 </script>
 </body>
