@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>CAK3D_Creations</title>
+<meta name="description" content="Signals, systems & side-quests from CAK3D — a maker who drives for data. Home of Flying Flocks and more field-built tools." />
+<meta name="theme-color" content="#060910" />
+<meta property="og:title" content="CAK3D_Creations" />
+<meta property="og:description" content="Signals, systems & side-quests from CAK3D. Home of Flying Flocks and more." />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#060910; --panel:#0c111c; --panel2:#0a0f18; --ink:#e8eef7; --muted:#8a97ad;
+    --cyan:#22d3ee; --mag:#ff3d9a; --green:#34d399; --amber:#f59e0b; --violet:#a78bfa;
+    --line:rgba(120,160,200,.14);
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --disp:'Space Grotesk',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink); font-family:var(--disp);
+    -webkit-font-smoothing:antialiased; overflow-x:hidden; line-height:1.55;
+  }
+  a{color:inherit;text-decoration:none}
+  canvas#bg{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;opacity:.9}
+  .wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 20px}
+  .mono{font-family:var(--mono)}
+  .glow{text-shadow:0 0 22px currentColor}
+
+  /* nav */
+  header{position:sticky;top:0;z-index:5;backdrop-filter:blur(10px);
+    background:linear-gradient(to bottom,rgba(6,9,16,.9),rgba(6,9,16,.55));border-bottom:1px solid var(--line)}
+  nav{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .logo{font-family:var(--mono);font-weight:700;letter-spacing:.5px;font-size:17px}
+  .logo b{color:var(--cyan)} .logo i{color:var(--mag);font-style:normal}
+  .navlinks{display:flex;gap:22px;font-family:var(--mono);font-size:13px;color:var(--muted)}
+  .navlinks a:hover{color:var(--cyan)}
+  @media(max-width:640px){.navlinks{display:none}}
+
+  /* hero */
+  .hero{padding:92px 0 64px;text-align:center}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:3px;color:var(--cyan);opacity:.9}
+  h1{font-size:clamp(44px,11vw,104px);line-height:.92;margin:14px 0 8px;font-weight:700;letter-spacing:-1px}
+  h1 .c{color:var(--cyan)} h1 .m{color:var(--mag)}
+  .tagline{font-size:clamp(16px,3.6vw,22px);color:var(--ink);max-width:620px;margin:10px auto 6px}
+  .sub{color:var(--muted);max-width:560px;margin:0 auto 30px;font-size:15px}
+  .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .btn{font-family:var(--mono);font-size:14px;font-weight:700;padding:13px 22px;border-radius:12px;
+    border:1px solid var(--line);background:var(--panel);transition:.15s;display:inline-flex;align-items:center;gap:8px}
+  .btn:hover{transform:translateY(-2px)}
+  .btn.primary{background:linear-gradient(90deg,var(--cyan),var(--mag));color:#05070c;border:none;box-shadow:0 0 30px rgba(34,211,238,.25)}
+  .btn.ghost:hover{border-color:var(--cyan);color:var(--cyan)}
+
+  .stripe{display:flex;gap:26px;justify-content:center;flex-wrap:wrap;margin-top:34px;
+    font-family:var(--mono);font-size:12px;color:var(--muted)}
+  .stripe b{color:var(--ink)}
+
+  section{padding:56px 0}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--mag)}
+  h2{font-size:clamp(26px,5vw,40px);margin:8px 0 6px;letter-spacing:-.5px}
+  .lead{color:var(--muted);max-width:640px}
+
+  /* featured card */
+  .feature{margin-top:26px;border:1px solid var(--line);border-radius:20px;overflow:hidden;
+    background:linear-gradient(180deg,var(--panel),var(--panel2));position:relative}
+  .feature::before{content:"";position:absolute;inset:0;background:
+    radial-gradient(600px 240px at 12% -10%,rgba(34,211,238,.14),transparent 60%),
+    radial-gradient(520px 240px at 95% 0%,rgba(255,61,154,.12),transparent 60%);pointer-events:none}
+  .feat-body{position:relative;padding:28px}
+  .badge{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:1px;
+    color:var(--green);border:1px solid rgba(52,211,153,.4);background:rgba(52,211,153,.1);
+    padding:4px 10px;border-radius:999px}
+  .feat-title{font-size:clamp(28px,6vw,46px);margin:14px 0 4px;letter-spacing:-.5px}
+  .feat-title .f{color:var(--cyan)}
+  .feat-desc{color:var(--muted);max-width:620px;margin-bottom:18px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+  .chip{font-family:var(--mono);font-size:12px;color:var(--ink);border:1px solid var(--line);
+    border-radius:8px;padding:6px 10px;background:rgba(255,255,255,.02)}
+  .chip .dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:7px;vertical-align:middle}
+
+  /* projects grid */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-top:26px}
+  .card{border:1px solid var(--line);border-radius:16px;padding:20px;background:var(--panel);transition:.15s}
+  .card:hover{transform:translateY(-3px);border-color:var(--cyan)}
+  .card .tag{font-family:var(--mono);font-size:11px;color:var(--amber)}
+  .card.soon{opacity:.72}
+  .card.soon .tag{color:var(--muted)}
+  .card h3{margin:8px 0 6px;font-size:19px}
+  .card p{margin:0;color:var(--muted);font-size:14px}
+
+  .about{border:1px solid var(--line);border-radius:20px;padding:28px;background:var(--panel);margin-top:22px}
+  .about p{color:var(--ink);max-width:720px}
+  .about .sig{font-family:var(--mono);color:var(--cyan);margin-top:14px;font-size:14px}
+
+  footer{border-top:1px solid var(--line);padding:30px 0 48px;color:var(--muted);font-family:var(--mono);font-size:13px}
+  .foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  .foot a:hover{color:var(--cyan)}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+
+<header><div class="wrap"><nav>
+  <div class="logo"><b>CAK3D</b>_<i>Creations</i></div>
+  <div class="navlinks">
+    <a href="#flyingflocks">Flying Flocks</a>
+    <a href="#creations">Creations</a>
+    <a href="#about">About</a>
+    <a href="https://github.com/real-CAK3D" target="_blank" rel="noopener">GitHub ↗</a>
+  </div>
+</nav></div></header>
+
+<main class="wrap">
+
+  <div class="hero">
+    <div class="kicker mono">// FIELD-BUILT TOOLS · SIGNALS · SYSTEMS</div>
+    <h1>CAK3D<span class="c">_</span><span class="m">CREATIONS</span></h1>
+    <p class="tagline">Signals, systems &amp; side-quests from a maker who drives for data.</p>
+    <p class="sub">Hardware that solders on the bench and apps that run in the car. This is where the builds live.</p>
+    <div class="cta">
+      <a class="btn primary" href="#flyingflocks">▸ Explore Flying Flocks</a>
+      <a class="btn ghost" href="https://github.com/real-CAK3D" target="_blank" rel="noopener">⌁ GitHub</a>
+    </div>
+    <div class="stripe mono">
+      <span><b>RF</b> signal intelligence</span>
+      <span><b>ESP32-C5</b> + CC1101 nodes</span>
+      <span><b>Meshtastic</b> mesh</span>
+      <span><b>Android</b> field apps</span>
+    </div>
+  </div>
+
+  <section id="flyingflocks">
+    <div class="eyebrow mono">// FEATURED BUILD</div>
+    <h2>The flagship in the field</h2>
+    <p class="lead">A wardriving cyber-deck for your pocket — scan the air around you, map it, and pull it apart in the lab.</p>
+
+    <div class="feature"><div class="feat-body">
+      <span class="badge">● BETA · ANDROID</span>
+      <div class="feat-title"><span class="f">Flying</span> Flocks</div>
+      <p class="feat-desc">Drive and the invisible lights up: Wi-Fi, Bluetooth and sub-GHz radio, cameras, mesh nodes and aircraft — mapped live, scored, and taken apart. Built around a fleet of ESP32-C5 "Biscuit" boards with a CC1101 sub-GHz antenna, and it works on just the phone too.</p>
+      <div class="chips">
+        <span class="chip"><span class="dot" style="background:var(--cyan)"></span>Wi-Fi · 2.4 &amp; 5 GHz</span>
+        <span class="chip"><span class="dot" style="background:var(--violet)"></span>Bluetooth LE</span>
+        <span class="chip"><span class="dot" style="background:var(--amber)"></span>Sub-GHz · 315/433/868/915</span>
+        <span class="chip"><span class="dot" style="background:var(--green)"></span>Live map &amp; trail</span>
+        <span class="chip"><span class="dot" style="background:var(--cyan)"></span>GPS satellites</span>
+        <span class="chip"><span class="dot" style="background:var(--mag)"></span>Aircraft · live ADS-B</span>
+        <span class="chip"><span class="dot" style="background:var(--violet)"></span>Spectrum &amp; channels</span>
+        <span class="chip"><span class="dot" style="background:var(--amber)"></span>Lab bench</span>
+        <span class="chip"><span class="dot" style="background:var(--green)"></span>Dead-zone privacy</span>
+      </div>
+      <div class="cta" style="justify-content:flex-start">
+        <a class="btn primary" href="https://github.com/real-CAK3D/FlyingFlocks/releases" target="_blank" rel="noopener">⇩ Download APK</a>
+        <a class="btn ghost" href="https://github.com/real-CAK3D/FlyingFlocks" target="_blank" rel="noopener">Source ↗</a>
+      </div>
+    </div></div>
+  </section>
+
+  <section id="creations">
+    <div class="eyebrow mono">// THE WORKBENCH</div>
+    <h2>More creations</h2>
+    <p class="lead">Everything CAK3D builds, gathering here over time. More coming online.</p>
+    <div class="grid">
+      <div class="card">
+        <div class="tag mono">HARDWARE · FIRMWARE</div>
+        <h3>Biscuit Mesh</h3>
+        <p>XIAO ESP32-C5 fleet — dual-band Wi-Fi + CC1101 sub-GHz "Biscuit" nodes that feed the map.</p>
+      </div>
+      <div class="card soon">
+        <div class="tag mono">SOON</div>
+        <h3>The Portal</h3>
+        <p>Territory, leveling and a live map of everyone in the field — the online side of the flock.</p>
+      </div>
+      <div class="card soon">
+        <div class="tag mono">SOON</div>
+        <h3>More builds</h3>
+        <p>Side-quests from the bench. If it has a radio, a sensor or a screen, it probably ends up here.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="eyebrow mono">// OPERATOR</div>
+    <h2>Who's behind the bench</h2>
+    <div class="about">
+      <p>CAK3D builds tools for the signals nobody else is looking at. Weeknights it's a soldering iron and an ESP32; weekends it's a drive with the radios running, harvesting the air into a map. The work leans cyberpunk and a little gamified — leaderboards, territory, badges — because data is more fun when it's a game.</p>
+      <p>Everything here is field-tested: if it can't survive a real drive, it doesn't ship.</p>
+      <div class="sig mono">— ꧁ᙅᗣҜӠᙃ꧂ · team CAK3D · US</div>
+    </div>
+  </section>
+
+</main>
+
+<footer><div class="wrap foot">
+  <span>© 2026 CAK3D_Creations</span>
+  <span>
+    <a href="https://github.com/real-CAK3D" target="_blank" rel="noopener">GitHub</a> ·
+    <a href="#flyingflocks">Flying Flocks</a>
+  </span>
+</div></footer>
+
+<script>
+// Signal-field background: drifting pings + faint mesh lines + a slow baseline wave.
+(function(){
+  const c = document.getElementById('bg'), x = c.getContext('2d');
+  let W,H,dots,t=0;
+  const COLORS=['#22d3ee','#ff3d9a','#34d399','#a78bfa'];
+  function size(){ W=c.width=innerWidth*devicePixelRatio; H=c.height=innerHeight*devicePixelRatio; c.style.width=innerWidth+'px'; c.style.height=innerHeight+'px'; seed(); }
+  function seed(){
+    const n = Math.min(90, Math.floor(W*H/26000));
+    dots=[]; for(let i=0;i<n;i++) dots.push({
+      px:Math.random()*W, py:Math.random()*H,
+      vx:(Math.random()-.5)*.25*devicePixelRatio, vy:(Math.random()-.5)*.25*devicePixelRatio,
+      r:(Math.random()*1.6+.6)*devicePixelRatio, col:COLORS[(Math.random()*COLORS.length)|0],
+      ph:Math.random()*Math.PI*2
+    });
+  }
+  function frame(){
+    t+=0.012; x.clearRect(0,0,W,H);
+    // baseline waveform
+    x.globalAlpha=.16; x.strokeStyle='#22d3ee'; x.lineWidth=1.2*devicePixelRatio; x.beginPath();
+    for(let i=0;i<=W;i+=6*devicePixelRatio){
+      const y=H*0.62 + Math.sin(i*0.004+t)*10*devicePixelRatio + Math.sin(i*0.013-t*1.6)*6*devicePixelRatio;
+      i===0?x.moveTo(i,y):x.lineTo(i,y);
+    } x.stroke(); x.globalAlpha=1;
+    // mesh lines
+    for(let i=0;i<dots.length;i++){ for(let j=i+1;j<dots.length;j++){
+      const a=dots[i],b=dots[j],dx=a.px-b.px,dy=a.py-b.py,d=Math.hypot(dx,dy),lim=120*devicePixelRatio;
+      if(d<lim){ x.globalAlpha=(1-d/lim)*.12; x.strokeStyle='#6ea8c8'; x.lineWidth=devicePixelRatio; x.beginPath(); x.moveTo(a.px,a.py); x.lineTo(b.px,b.py); x.stroke(); }
+    }}
+    x.globalAlpha=1;
+    // pings
+    for(const p of dots){
+      p.px+=p.vx; p.py+=p.vy;
+      if(p.px<0)p.px+=W; if(p.px>W)p.px-=W; if(p.py<0)p.py+=H; if(p.py>H)p.py-=H;
+      const pulse=(Math.sin(t*2+p.ph)*.5+.5);
+      x.globalAlpha=.25+pulse*.55; x.fillStyle=p.col;
+      x.beginPath(); x.arc(p.px,p.py,p.r+pulse*1.4*devicePixelRatio,0,7); x.fill();
+      x.globalAlpha=.08; x.beginPath(); x.arc(p.px,p.py,(p.r+pulse*1.4*devicePixelRatio)*3.2,0,7); x.fill();
+    }
+    x.globalAlpha=1; requestAnimationFrame(frame);
+  }
+  addEventListener('resize',size); size(); frame();
+})();
+</script>
+</body>
+</html>
