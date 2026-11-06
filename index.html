@@ -299,19 +299,19 @@
   const PROJECTS=[
     {name:'Flying Flocks', k:'WARDRIVE · RF', pf:['android','esp32'],
      desc:'Drive and the invisible lights up — Wi-Fi, Bluetooth, sub-GHz, cameras, mesh and aircraft, mapped live and scored. Runs on a fleet of ESP32-C5 "Biscuit" boards or just the phone.',
-     links:[{t:'Download APK',u:R+'FlyingFlocks/releases/latest',go:1},{t:'Source',u:R+'FlyingFlocks'}]},
+     links:[{t:'Download APK',u:R+'FlyingFlocks/releases/latest',go:1,apk:1},{t:'Source',u:R+'FlyingFlocks'}]},
     {name:'Shelf & Stock', k:'KITCHEN · INVENTORY', pf:['web','android'],
      desc:'Your whole kitchen in your pocket — every cabinet, the fridge and the garage, a smart shopping list, meal planning, and recipes from what you already have.',
-     links:[{t:'Open',u:'https://shelfandstock.vercel.app',go:1},{t:'APK',u:R+'ShelfandStock/releases/latest'},{t:'Source',u:R+'ShelfandStock'}]},
+     links:[{t:'Open',u:'https://shelfandstock.vercel.app',go:1},{t:'APK',u:R+'ShelfandStock/releases/latest',apk:1},{t:'Source',u:R+'ShelfandStock'}]},
     {name:'Home Inventory', k:'FAMILY · STORAGE', pf:['web','android'],
      desc:'Find any box on the shelf: photograph the whole storage wall, then "blender → Section 7 › Box 41" and it lights up on a map of the shelves.',
-     links:[{t:'Open',u:'https://home-inventory-37.vercel.app',go:1},{t:'APK',u:R+'HomeInventory/releases/latest'},{t:'Source',u:R+'HomeInventory'}]},
+     links:[{t:'Open',u:'https://home-inventory-37.vercel.app',go:1},{t:'APK',u:R+'HomeInventory/releases/latest',apk:1},{t:'Source',u:R+'HomeInventory'}]},
     {name:'MapPI3', k:'TRAIL · NAV', pf:['android','web','pi'],
      desc:'A phone-first trail companion — plan, launch and navigate hikes with offline route packs and OSM trail geometry, headed for a Raspberry Pi field kit.',
-     links:[{t:'APK',u:R+'MapPI3/releases/latest',go:1},{t:'Source',u:R+'MapPI3'}]},
+     links:[{t:'APK',u:R+'MapPI3/releases/latest',go:1,apk:1},{t:'Source',u:R+'MapPI3'}]},
     {name:'What the Flock!', k:'SURVEILLANCE · DETECT', pf:['android','web','esp32'],
      desc:'Spot Flock Safety plate cameras on the road — detector firmware on a XIAO ESP32-S3 plus a phone app with camera-aware navigation.',
-     links:[{t:'APK',u:R+'WhatTheFlock/releases/latest',go:1},{t:'Source',u:R+'WhatTheFlock'}]},
+     links:[{t:'APK',u:R+'WhatTheFlock/releases/latest',go:1,apk:1},{t:'Source',u:R+'WhatTheFlock'}]},
     {name:'GTA-Watch', k:'WEARABLE · FIRMWARE', pf:['esp32','android'],
      desc:'A GTA-style minimap and turn-by-turn watch on an ESP32-S3 AMOLED, with an Android companion app.',
      links:[{t:'Download',u:R+'ESP-Watch/releases/latest',go:1},{t:'Source',u:R+'ESP-Watch'}]},
@@ -326,7 +326,7 @@
      links:[{t:'Release',u:R+'Spac3-Gh0st/releases/latest',go:1},{t:'Source',u:R+'Spac3-Gh0st'}]},
     {name:'TorqueClock', k:'SHOP · TIMER', pf:['android','web'],
      desc:'A phone-first mechanic shift and job timer — clock jobs, tally the day, and keep the shop running on time.',
-     links:[{t:'APK',u:R+'Torque-Timer/releases/latest',go:1},{t:'Source',u:R+'Torque-Timer'}]},
+     links:[{t:'APK',u:R+'Torque-Timer/releases/latest',go:1,apk:1},{t:'Source',u:R+'Torque-Timer'}]},
     {name:'Platform of Things', k:'3D · PORTFOLIO', pf:['web'],
      desc:"A first-person 3D portfolio world — walk through CAK3D's bots, servers, apps, the garage and the trail, each its own little place.",
      links:[{t:'Enter',u:'https://real-cak3d.github.io/',go:1},{t:'Source',u:R+'platform-of-things'}]},
@@ -347,11 +347,31 @@
   const pill=k=>{const m=PF[k];return `<span class="pf" style="color:${m.c};border-color:${m.c}55"><i style="background:${m.c}"></i>${m.l}</span>`};
   document.getElementById('grid').innerHTML=PROJECTS.map(p=>{
     const pfs=p.pf.map(pill).join('');
-    const acts=p.links.map(l=>`<a class="alink${l.go?' go':''}" href="${l.u}" target="_blank" rel="noopener">${esc(l.t)}</a>`).join('');
+    const acts=p.links.map(l=>{
+      const apk=l.apk?` data-apk-latest="${l.u.replace('https://github.com/','').replace('/releases/latest','')}"`:'';
+      return `<a class="alink${l.go?' go':''}" href="${l.u}" target="_blank" rel="noopener"${apk}>${esc(l.t)}</a>`;
+    }).join('');
     return `<div class="card"><h3><span class="k">${esc(p.k)}</span>${esc(p.name)}</h3><div class="pfs">${pfs}</div><p class="desc">${esc(p.desc)}</p><div class="acts">${acts}</div></div>`;
   }).join('');
   document.getElementById('legend').innerHTML='<span>Runs on:</span> '+Object.keys(PF).map(pill).join('')
     +' <span>· Web runs in any phone or desktop browser, iPhone included.</span>';
+
+  // Point every "APK" button straight at the latest release's .apk asset, so a tap on
+  // a phone downloads the file instead of landing on GitHub's release page (where the
+  // APK is hidden in a collapsed "Assets" list). Public repos only; on any failure the
+  // button keeps its releases/latest page as a fallback.
+  (async()=>{
+    for(const a of document.querySelectorAll('[data-apk-latest]')){
+      const repo=a.getAttribute('data-apk-latest');
+      try{
+        const r=await fetch(`https://api.github.com/repos/${repo}/releases/latest`,{headers:{Accept:'application/vnd.github+json'}});
+        if(!r.ok) continue;
+        const j=await r.json();
+        const apk=(j.assets||[]).find(x=>/\.apk$/i.test(x.name));
+        if(apk&&apk.browser_download_url){ a.href=apk.browser_download_url; a.setAttribute('download',apk.name); a.removeAttribute('target'); }
+      }catch{}
+    }
+  })();
 })();
 </script>
 </body>
