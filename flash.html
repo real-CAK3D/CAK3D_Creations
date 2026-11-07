@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>CAK3D_Creations · Flash Bench</title>
+<meta name="description" content="Flash CAK3D firmware straight from your browser — the board tells the page what it is, and only matching firmware is allowed. ESP32 over USB; Raspberry Pi over SD card." />
+<meta name="theme-color" content="#070c08" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<!-- ESP Web Tools: connects over Web Serial, reads the chip in the board, and refuses
+     any firmware whose chip family doesn't match the board. Desktop Chrome/Edge only. -->
+<script type="module" src="https://unpkg.com/esp-web-tools@10.0.0/dist/web/install-button.js?module"></script>
+<style>
+  :root{
+    --bg:#070c08; --panel:#0e140d; --panel2:#0b110a; --ink:#e7f0e2; --muted:#8fa189;
+    --cyan:#5fd36a; --mag:#e8873a; --green:#86efac; --amber:#f0b429; --violet:#9bbf6a;
+    --ember:#ff6a3d; --bark:#9a7b53; --star:#ffe7a3; --fern:#3fa34d;
+    --line:rgba(120,170,110,.15);
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --disp:'Space Grotesk',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--disp);
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.55}
+  a{color:inherit;text-decoration:none}
+  canvas#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;opacity:.9}
+  .wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 20px}
+  .mono{font-family:var(--mono)}
+
+  header{position:sticky;top:0;z-index:5;backdrop-filter:blur(10px);
+    background:linear-gradient(to bottom,rgba(6,9,16,.9),rgba(6,9,16,.55));border-bottom:1px solid var(--line)}
+  nav{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .logo{font-family:var(--mono);font-weight:700;letter-spacing:.5px;font-size:17px}
+  .logo b{color:var(--cyan)} .logo i{color:var(--mag);font-style:normal}
+  .navlinks{display:flex;gap:22px;font-family:var(--mono);font-size:13px;color:var(--muted)}
+  .navlinks a:hover{color:var(--cyan)}
+  @media(max-width:640px){.navlinks{display:none}}
+
+  .hero{padding:72px 0 28px;text-align:center}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:3px;color:var(--cyan);opacity:.9}
+  h1{font-size:clamp(30px,8vw,76px);line-height:.98;margin:14px 0 8px;font-weight:700;letter-spacing:-1px}
+  h1 .c{color:var(--cyan)} h1 .m{color:var(--mag)}
+  .tagline{font-size:clamp(16px,3.4vw,21px);color:var(--ink);max-width:640px;margin:10px auto 6px}
+  .sub{color:var(--muted);max-width:600px;margin:0 auto 10px;font-size:15px}
+
+  /* environment banner */
+  .env{margin:22px auto 0;max-width:760px;border-radius:14px;border:1px solid var(--line);
+    padding:16px 18px;font-family:var(--mono);font-size:13px;display:flex;gap:12px;align-items:flex-start}
+  .env .ic{font-size:18px;line-height:1.2}
+  .env.ok{background:rgba(52,211,153,.08);border-color:rgba(52,211,153,.4);color:var(--green)}
+  .env.bad{background:rgba(255,106,61,.08);border-color:rgba(255,106,61,.45);color:#ffb59c}
+  .env b{color:var(--ink)}
+  .env small{display:block;color:var(--muted);margin-top:4px;line-height:1.5}
+
+  section{padding:30px 0}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--mag)}
+  h2{font-size:clamp(24px,5vw,36px);margin:8px 0 6px;letter-spacing:-.5px}
+  .lead{color:var(--muted);max-width:680px}
+
+  .safety{margin-top:16px;border:1px solid rgba(240,180,41,.35);background:rgba(240,180,41,.07);
+    border-radius:14px;padding:16px 18px;font-size:14px;color:var(--ink)}
+  .safety b{color:var(--amber)}
+  .safety .mono{color:var(--star)}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-top:22px}
+  .card{border:1px solid var(--line);border-radius:16px;padding:20px;background:var(--panel);
+    display:flex;flex-direction:column;transition:.15s}
+  .card:hover{border-color:var(--cyan)}
+  .card h3{margin:0 0 2px;font-size:20px}
+  .board{font-family:var(--mono);font-size:12px;color:var(--amber);margin:6px 0 2px}
+  .chip{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;font-weight:700;
+    padding:3px 9px;border-radius:999px;border:1px solid var(--line);margin:8px 0 10px;width:max-content}
+  .chip i{width:7px;height:7px;border-radius:50%;display:inline-block}
+  .card .desc{margin:0 0 16px;color:var(--muted);font-size:14px;flex:1}
+  .flashrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:auto}
+  .btn{font-family:var(--mono);font-size:14px;font-weight:700;padding:11px 18px;border-radius:11px;
+    border:1px solid var(--line);background:var(--panel2);transition:.15s;cursor:pointer;color:var(--ink)}
+  .btn:hover{transform:translateY(-2px)}
+  .btn.go{background:linear-gradient(90deg,var(--fern),var(--amber));color:#06100a;border:none}
+  .btn.go:hover{box-shadow:0 0 22px rgba(95,211,106,.3)}
+  .btn.building{background:var(--panel2);color:var(--muted);cursor:not-allowed;border-style:dashed}
+  .btn.building:hover{transform:none}
+  .src{font-family:var(--mono);font-size:12px;color:var(--muted)}
+  .src:hover{color:var(--cyan)}
+  .slotmsg{font-family:var(--mono);font-size:12px;color:var(--muted);max-width:220px}
+
+  /* pi section */
+  .pi{margin-top:22px;border:1px solid var(--line);border-radius:16px;background:var(--panel);overflow:hidden}
+  .pi-head{padding:18px 20px;border-bottom:1px solid var(--line)}
+  .pi-head .note{color:var(--muted);font-size:14px;margin-top:6px}
+  .pi-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:0}
+  .pi-item{padding:18px 20px;border-top:1px solid var(--line)}
+  .pi-item:nth-child(-n+3){border-top:none}
+  @media(max-width:860px){.pi-item{border-top:1px solid var(--line)!important}}
+  .pi-item h4{margin:0 0 4px;font-size:17px}
+  .pi-item .board{margin:4px 0 8px}
+  .pi-item p{margin:0 0 12px;color:var(--muted);font-size:13.5px}
+  .steps{font-family:var(--mono);font-size:12px;color:var(--muted);margin:0 0 12px;padding-left:18px;line-height:1.7}
+  .steps b{color:var(--star)}
+
+  footer{border-top:1px solid var(--line);padding:30px 0 48px;color:var(--muted);font-family:var(--mono);font-size:13px;margin-top:30px}
+  .foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  .foot a:hover{color:var(--cyan)}
+
+  /* ESP Web Tools dialog follows the OS theme; nudge its accent to our green */
+  :root{--esp-tools-button-color:#06100a;--esp-tools-button-text-color:#06100a}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+
+<header><div class="wrap"><nav>
+  <a class="logo" href="./"><b>CAK3D</b>_<i>Creations</i></a>
+  <div class="navlinks">
+    <a href="./#creations">Builds</a>
+    <a href="./flash.html">Flash</a>
+    <a href="https://github.com/real-CAK3D" target="_blank" rel="noopener">GitHub ↗</a>
+  </div>
+</nav></div></header>
+
+<main class="wrap">
+
+  <div class="hero">
+    <div class="kicker mono">// SOLDER · CONNECT · FLASH</div>
+    <h1>The <span class="c">Flash</span> <span class="m">Bench</span></h1>
+    <p class="tagline">Put CAK3D firmware on a board straight from the browser — no IDE, no command line.</p>
+    <p class="sub">Plug the board in by USB, hit Flash, pick the port. The board tells the page which chip it is, and the page only lets through firmware that matches — so no board ever gets the wrong firmware.</p>
+    <div id="env" class="env"></div>
+  </div>
+
+  <section id="usb">
+    <div class="eyebrow mono">// USB · ESP32 FAMILY</div>
+    <h2>Flash over USB</h2>
+    <p class="lead">These run on ESP32 chips and flash over a USB-serial cable. Each card names the exact board it was built for.</p>
+    <div class="safety">
+      <b>⛊ The board-match guard.</b> When you connect, the flasher reads the chip inside your board and
+      refuses any image built for a different chip. Heads-up where it can't decide for you:
+      two builds share the <span class="mono">ESP32-C5</span> chip — <b>Biscuit</b> and <b>wtBLEep</b> —
+      so the chip check passes for both. <b>Pick by the board name on the card, not just the chip.</b>
+    </div>
+    <div class="grid" id="usbgrid"></div>
+  </section>
+
+  <section id="pi">
+    <div class="eyebrow mono">// SD CARD · RASPBERRY PI</div>
+    <h2>Flash a Pi (SD card)</h2>
+    <p class="lead">Raspberry Pi builds boot from an SD card image — and a browser can't write a raw disk image to an SD card safely, so these don't flash here. Write the image with the free Raspberry Pi Imager instead; it's two minutes.</p>
+    <div class="pi">
+      <div class="pi-head">
+        <strong>How to write any Pi image</strong>
+        <div class="note">Download <a class="src" href="https://www.raspberrypi.com/software/" target="_blank" rel="noopener" style="color:var(--cyan)">Raspberry Pi Imager</a> → <em>Choose OS → Use custom</em> → pick the downloaded <span class="mono">.img</span> (or <span class="mono">.img.xz</span>) → <em>Choose Storage</em> → your SD card → <em>Write</em>. Then put the card in the Pi and power up.</div>
+      </div>
+      <div class="pi-list" id="pilist"></div>
+    </div>
+  </section>
+
+  <section id="noflash">
+    <div class="eyebrow mono">// NO BOARD NEEDED</div>
+    <h2>The rest just open</h2>
+    <p class="lead">A lot of the workshop is web or Android — nothing to flash. Web builds run in any browser (iPhone included); Android builds install from an APK. Grab those on the <a href="./#creations" style="color:var(--cyan)">Builds</a> page.</p>
+  </section>
+
+</main>
+
+<footer><div class="wrap foot">
+  <span>© 2026 CAK3D_Creations · Flash Bench</span>
+  <span><a href="./#creations">Builds</a> · <a href="https://github.com/real-CAK3D" target="_blank" rel="noopener">GitHub</a></span>
+</div></footer>
+
+<script>
+// ---- environment check: Web Serial is desktop Chrome/Edge/Opera only ----
+(function(){
+  const el=document.getElementById('env');
+  const ok=('serial' in navigator);
+  const secure=window.isSecureContext;
+  if(ok && secure){
+    el.className='env ok';
+    el.innerHTML='<span class="ic">✓</span><div><b>You\'re good to flash.</b> This browser supports USB flashing. '+
+      'Plug your board in, then hit Flash on a card below.</div>';
+  }else{
+    el.className='env bad';
+    const why = !secure
+      ? 'This page needs to be opened over <b>https</b> for USB access.'
+      : 'This browser can\'t talk to USB serial devices.';
+    el.innerHTML='<span class="ic">⚠</span><div><b>USB flashing won\'t work here.</b> '+why+
+      '<small>Web Serial only works on a <b>computer</b> running <b>Chrome</b>, <b>Edge</b> or <b>Opera</b> — '+
+      'not on phones (Android or iPhone), and not in Safari or Firefox. '+
+      'Open this page on a desktop/laptop in Chrome or Edge to flash. '+
+      'The Raspberry Pi section below works from anywhere.</small></div>';
+  }
+})();
+
+// ---- USB firmware catalog (data-driven: a new board is one entry + its manifest) ----
+(function(){
+  const CHIP={
+    'ESP32-C5':{c:'#f0b429'}, 'ESP32-S3':{c:'#5fd36a'}, 'ESP32':{c:'#5bc8b0'}, 'ESP32-C3':{c:'#9bbf6a'}
+  };
+  const R='https://github.com/real-CAK3D/';
+  // status: 'ready' => live flash button; 'building' => firmware not hosted yet
+  const FW=[
+    {name:'Flying Flocks — Biscuit', board:'Seeed XIAO ESP32-C5', chip:'ESP32-C5',
+     desc:'The "Biscuit" wardrive node: Wi-Fi + Bluetooth scanning and Meshtastic mesh, feeding the Flying Flocks app.',
+     manifest:'firmware/biscuit/manifest.json', src:R+'FlyingFlocks', status:'ready'},
+    {name:'wtBLEep', board:'Seeed XIAO ESP32-C5 + CC1101', chip:'ESP32-C5',
+     desc:'Sub-GHz + BLE node on the XIAO ESP32-C5 with a CC1101/E07 radio — the sub-GHz sniffer board.',
+     manifest:'firmware/wtbleep/manifest.json', src:R+'wtBLEep', status:'ready'},
+    {name:'GTA-Watch', board:'ESP32-S3-DevKitC1-N16R8 (32 MB)', chip:'ESP32-S3',
+     desc:'GTA-style minimap + turn-by-turn watch firmware for the ESP32-S3 AMOLED build. (v2.1.1)',
+     manifest:'firmware/gtawatch/manifest.json', src:R+'ESP-Watch', status:'ready'},
+    {name:'Hu-Motian', board:'ESP32 DevKit (classic)', chip:'ESP32',
+     desc:'Human-radar firmware: ESP32 + 24 GHz mmWave sensor streaming presence data to the 3D room.',
+     manifest:'firmware/humotian/manifest.json', src:R+'Hu-Motian', status:'ready'},
+    {name:'What the Flock!', board:'Seeed XIAO ESP32-S3', chip:'ESP32-S3',
+     desc:'Flock Safety camera-detector firmware for the XIAO ESP32-S3 dongle.',
+     manifest:'firmware/whattheflock/manifest.json', src:R+'WhatTheFlock', status:'building'},
+  ];
+  const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  document.getElementById('usbgrid').innerHTML=FW.map((f,i)=>{
+    const col=(CHIP[f.chip]||{c:'#8fa189'}).c;
+    const chip=`<span class="chip" style="color:${col};border-color:${col}55"><i style="background:${col}"></i>${esc(f.chip)}</span>`;
+    let flash;
+    if(f.status==='ready'){
+      flash=`<esp-web-install-button manifest="${esc(f.manifest)}">
+          <button class="btn go" slot="activate">⚡ Flash</button>
+          <span slot="unsupported" class="slotmsg">Open on a computer in Chrome or Edge to flash.</span>
+          <span slot="not-allowed" class="slotmsg">Needs an https connection.</span>
+        </esp-web-install-button>`;
+    }else{
+      flash=`<button class="btn building" disabled title="Firmware image is being compiled">🛠 Firmware building…</button>`;
+    }
+    return `<div class="card">
+      <h3>${esc(f.name)}</h3>
+      <div class="board">${esc(f.board)}</div>
+      ${chip}
+      <p class="desc">${esc(f.desc)}</p>
+      <div class="flashrow">${flash}<a class="src" href="${esc(f.src)}" target="_blank" rel="noopener">Source ↗</a></div>
+    </div>`;
+  }).join('');
+})();
+
+// ---- Raspberry Pi / SD-card builds ----
+(function(){
+  const R='https://github.com/real-CAK3D/';
+  const PI=[
+    {name:'Spac3-Gh0st', board:'Raspberry Pi',
+     desc:'Pi hacker-companion with a Pwnagotchi-style face and a glass dashboard.',
+     img:R+'Spac3-Gh0st/releases/latest', src:R+'Spac3-Gh0st'},
+    {name:'MapPI3', board:'Raspberry Pi field kit',
+     desc:'Trail-nav field kit image for a Pi, with offline route packs.',
+     img:R+'MapPI3/releases/latest', src:R+'MapPI3'},
+    {name:'Hack-Safe', board:'Raspberry Pi + Marauder',
+     desc:'Pi security-lab companion with a Marauder GUI front end.',
+     img:R+'Hack-Safe/releases/latest', src:R+'Hack-Safe'},
+  ];
+  const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  document.getElementById('pilist').innerHTML=PI.map(p=>`
+    <div class="pi-item">
+      <h4>${esc(p.name)}</h4>
+      <div class="board">${esc(p.board)}</div>
+      <p>${esc(p.desc)}</p>
+      <div class="flashrow">
+        <a class="btn go" href="${esc(p.img)}" target="_blank" rel="noopener" style="text-decoration:none">⬇ Get image</a>
+        <a class="src" href="${esc(p.src)}" target="_blank" rel="noopener">Source ↗</a>
+      </div>
+    </div>`).join('');
+})();
+
+// ---- shared woods/campfire background (same as the hub) ----
+(function(){
+  const c=document.getElementById('bg'),x=c.getContext('2d');
+  let W,H,stars,trees,embers,fire,dots,t=0;
+  const COLORS=['#5fd36a','#86efac','#e8873a','#ffe7a3','#3fa34d'];
+  function newEmber(){const fx=fire?fire.x:W*0.14,fy=fire?fire.y:H;
+    return{x:fx+(Math.random()-.5)*16,y:fy-Math.random()*18,vx:(Math.random()-.5)*0.3,
+      vy:-(0.3+Math.random()*0.8),life:0.6+Math.random()*0.4,r:Math.random()*1.3+.5};}
+  function size(){const cw=document.documentElement.clientWidth,ch=document.documentElement.clientHeight;
+    W=c.width=cw*devicePixelRatio;H=c.height=ch*devicePixelRatio;seed();}
+  function seed(){
+    const n=Math.min(70,Math.floor(W*H/30000));dots=[];
+    for(let i=0;i<n;i++)dots.push({px:Math.random()*W,py:Math.random()*H,
+      vx:(Math.random()-.5)*.25*devicePixelRatio,vy:(Math.random()-.5)*.25*devicePixelRatio,
+      r:(Math.random()*1.5+.6)*devicePixelRatio,col:COLORS[(Math.random()*COLORS.length)|0],ph:Math.random()*6.28});
+    stars=[];const sn=Math.min(70,Math.floor(W/(26*devicePixelRatio)));
+    for(let i=0;i<sn;i++)stars.push({x:Math.random()*W,y:Math.random()*H*0.5,ph:Math.random()*6.28,r:(Math.random()*1.1+.4)*devicePixelRatio});
+    trees=[];let tx=-20*devicePixelRatio;
+    while(tx<W+30*devicePixelRatio){const w=(26+Math.random()*30)*devicePixelRatio,h=(55+Math.random()*95)*devicePixelRatio;
+      trees.push({x:tx,w,h,back:Math.random()<0.5});tx+=w*0.6;}
+    trees.sort((a,b)=>Number(b.back)-Number(a.back));
+    fire={x:W*0.13,y:H-14*devicePixelRatio};embers=[];
+    for(let i=0;i<22;i++){const e=newEmber();e.life=Math.random();embers.push(e);}
+  }
+  function frame(){const dpr=devicePixelRatio;t+=0.012;x.clearRect(0,0,W,H);
+    for(const s of stars){const tw=.35+.65*(Math.sin(t*1.5+s.ph)*.5+.5);
+      x.globalAlpha=tw*.8;x.fillStyle='#ffe7a3';x.beginPath();x.arc(s.x,s.y,s.r,0,7);x.fill();}
+    x.globalAlpha=1;
+    x.globalAlpha=.16;x.strokeStyle='#5fd36a';x.lineWidth=1.2*dpr;x.beginPath();
+    for(let i=0;i<=W;i+=6*dpr){const y=H*0.62+Math.sin(i*0.004+t)*10*dpr+Math.sin(i*0.013-t*1.6)*6*dpr;
+      i===0?x.moveTo(i,y):x.lineTo(i,y);}x.stroke();x.globalAlpha=1;
+    for(const p of dots){p.px+=p.vx;p.py+=p.vy;
+      if(p.px<0)p.px+=W;if(p.px>W)p.px-=W;if(p.py<0)p.py+=H;if(p.py>H)p.py-=H;
+      const pulse=(Math.sin(t*2+p.ph)*.5+.5);x.globalAlpha=.22+pulse*.5;x.fillStyle=p.col;
+      x.beginPath();x.arc(p.px,p.py,p.r+pulse*1.3*dpr,0,7);x.fill();}
+    x.globalAlpha=1;
+    for(const tr of trees){x.fillStyle=tr.back?'#0c160c':'#071006';
+      x.beginPath();x.moveTo(tr.x,H);x.lineTo(tr.x+tr.w/2,H-tr.h);x.lineTo(tr.x+tr.w,H);x.closePath();x.fill();}
+    const flick=(Math.sin(t*9)*.5+.5)*.4+(Math.sin(t*23+1)*.5+.5)*.2+.4;
+    const g=x.createRadialGradient(fire.x,fire.y,0,fire.x,fire.y,150*dpr*flick);
+    g.addColorStop(0,'rgba(255,150,60,'+(0.20*flick)+')');g.addColorStop(1,'rgba(255,150,60,0)');
+    x.fillStyle=g;x.fillRect(fire.x-170*dpr,fire.y-170*dpr,340*dpr,210*dpr);
+    x.strokeStyle='#5a3d28';x.lineWidth=4*dpr;x.lineCap='round';
+    x.beginPath();x.moveTo(fire.x-15*dpr,fire.y);x.lineTo(fire.x+15*dpr,fire.y-6*dpr);
+    x.moveTo(fire.x-15*dpr,fire.y-6*dpr);x.lineTo(fire.x+15*dpr,fire.y);x.stroke();
+    const flame=['#ff9a3d','#ff6a3d','#f0b429'];
+    for(let f=0;f<3;f++){const fh=(16+f*7)*dpr*(0.7+flick*0.6),fw=(8-f*1.8)*dpr,sway=Math.sin(t*7+f)*3*dpr;
+      x.globalAlpha=.85;x.fillStyle=flame[f];x.beginPath();x.moveTo(fire.x-fw+sway,fire.y-4*dpr);
+      x.quadraticCurveTo(fire.x+sway,fire.y-fh*1.5,fire.x+fw+sway,fire.y-4*dpr);x.closePath();x.fill();}
+    x.globalAlpha=1;
+    for(const e of embers){e.x+=e.vx;e.y+=e.vy;e.vx+=(Math.random()-.5)*0.05*dpr;e.life-=0.006;
+      if(e.life<=0||e.y<H*0.42){Object.assign(e,newEmber());}
+      x.globalAlpha=Math.max(0,e.life)*.85;x.fillStyle=(e.life>0.6)?'#f0b429':'#ff6a3d';
+      x.beginPath();x.arc(e.x,e.y,e.r,0,7);x.fill();}
+    x.globalAlpha=1;requestAnimationFrame(frame);
+  }
+  addEventListener('resize',size);size();frame();
+})();
+</script>
+</body>
+</html>

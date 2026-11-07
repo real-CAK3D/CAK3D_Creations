@@ -1,0 +1,13 @@
+{
+  "name": "wtBLEep",
+  "version": "latest",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32-C5",
+      "parts": [
+        { "path": "wtbleep-merged-0x0.bin", "offset": 0 }
+      ]
+    }
+  ]
+}

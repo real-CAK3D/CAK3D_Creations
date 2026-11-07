@@ -1,0 +1,13 @@
+{
+  "name": "Hu-Motian",
+  "version": "latest",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32",
+      "parts": [
+        { "path": "humotian-merged-0x0.bin", "offset": 0 }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "Flying Flocks Biscuit",
+  "version": "latest",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32-C5",
+      "parts": [
+        { "path": "biscuit-merged-0x0.bin", "offset": 0 }
+      ]
+    }
+  ]
+}
