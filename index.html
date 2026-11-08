@@ -427,8 +427,12 @@
   ];
   const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const pill=k=>{const m=PF[k];return `<span class="pf" style="color:${m.c};border-color:${m.c}55"><i style="background:${m.c}"></i>${m.l}</span>`};
+  // Direct .apk URLs by repo, filled in by the lookup below; the detail modal reuses them.
+  const apkUrls={};
   const actsHtml=p=>p.links.map(l=>{
-    const apk=l.apk?` data-apk-latest="${l.u.replace('https://github.com/','').replace('/releases/latest','')}"`:'';
+    const repo=l.apk?l.u.replace('https://github.com/','').replace('/releases/latest',''):null;
+    if(repo&&apkUrls[repo]) return `<a class="alink${l.go?' go':''}" href="${apkUrls[repo]}" rel="nofollow">${esc(l.t)}</a>`;
+    const apk=repo?` data-apk-latest="${repo}"`:'';
     return `<a class="alink${l.go?' go':''}" href="${l.u}" target="_blank" rel="noopener"${apk}>${esc(l.t)}</a>`;
   }).join('');
   document.getElementById('grid').innerHTML=PROJECTS.map((p,i)=>{
@@ -486,7 +490,7 @@
         // attribute: on Chrome for Android, `download` on a cross-origin link that redirects
         // (github.com → release-assets.githubusercontent.com) leaves the download stuck at the
         // end. GitHub's own Content-Disposition header already makes it a download.
-        if(apk&&apk.browser_download_url){ a.href=apk.browser_download_url; a.removeAttribute('download'); a.removeAttribute('target'); a.rel='nofollow'; }
+        if(apk&&apk.browser_download_url){ apkUrls[repo]=apk.browser_download_url; a.href=apk.browser_download_url; a.removeAttribute('download'); a.removeAttribute('target'); a.rel='nofollow'; }
       }catch{}
     }
   })();
