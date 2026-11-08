@@ -116,6 +116,23 @@
   .alink.go{background:linear-gradient(90deg,var(--cyan),var(--mag));color:#05070c;border:none}
   .legend{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:18px;font-family:var(--mono);font-size:12px;color:var(--muted)}
 
+  /* category tabs */
+  .tabs{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+  .tab{font-family:var(--mono);font-size:13px;font-weight:700;padding:9px 15px;border-radius:999px;
+    border:1px solid var(--line);background:var(--panel);color:var(--muted);cursor:pointer;transition:.15s;
+    display:inline-flex;align-items:center;gap:7px}
+  .tab:hover{border-color:var(--cyan);color:var(--cyan)}
+  .tab .n{font-size:11px;opacity:.7}
+  .tab.on{color:#06100a;border-color:transparent;background:linear-gradient(90deg,var(--fern),var(--amber));
+    box-shadow:0 0 22px rgba(95,211,106,.22)}
+  .tab.on .n{opacity:.85}
+  @media(max-width:640px){
+    .tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+      margin-left:-20px;margin-right:-20px;padding:2px 20px}
+    .tabs::-webkit-scrollbar{display:none}
+    .tab{white-space:nowrap;flex:0 0 auto}
+  }
+
   .about{border:1px solid var(--line);border-radius:20px;padding:28px;background:var(--panel);margin-top:22px}
   .about p{color:var(--ink);max-width:720px}
   .about .sig{font-family:var(--mono);color:var(--cyan);margin-top:14px;font-size:14px}
@@ -196,6 +213,7 @@
     <h2>The whole workshop</h2>
     <p class="lead">Every build CAK3D ships — field apps, device firmware, 3D worlds and dashboards — each tagged by where it runs and how to get it.</p>
     <div class="legend mono" id="legend"></div>
+    <div class="tabs" id="tabs" role="tablist"></div>
     <div class="grid" id="grid"></div>
   </section>
 
@@ -338,6 +356,21 @@
     esp32:  {l:'ESP32',        c:'#f0b429'},
   };
   const R='https://github.com/real-CAK3D/';
+  // Category tabs — keep the grid short. Order here is the tab order. Each project is
+  // slotted by name below; anything not listed falls into 'tools' so it's never hidden.
+  const CATS=[
+    {id:'all',   l:'All'},
+    {id:'rf',    l:'RF & Sensing'},
+    {id:'tools', l:'Field & Everyday'},
+    {id:'media', l:'Music & Media'},
+    {id:'world', l:'3D & Sim'},
+  ];
+  const CATMAP={
+    'Flying Flocks':'rf','What the Flock!':'rf','Spac3-Gh0st':'rf','Hu-Motian':'rf',
+    'Shelf & Stock':'tools','Home Inventory':'tools','MapPI3':'tools','TorqueClock':'tools','GTA-Watch':'tools',
+    'Foldman':'media','Classipod':'media','NostalgiaVue':'media','The Corner Chronicle':'media',
+    'Platform of Things':'world','Tiny Truck':'world','3D PC':'world','NeuroLab':'world',
+  };
   const PROJECTS=[
     {name:'Flying Flocks', k:'WARDRIVE · RF', pf:['android','esp32'],
      desc:'Drive and the invisible lights up — Wi-Fi, Bluetooth, sub-GHz, cameras, mesh and aircraft, mapped live and scored. Runs on a fleet of ESP32-C5 "Biscuit" boards or just the phone.',
@@ -435,12 +468,28 @@
     const apk=repo?` data-apk-latest="${repo}"`:'';
     return `<a class="alink${l.go?' go':''}" href="${l.u}" target="_blank" rel="noopener"${apk}>${esc(l.t)}</a>`;
   }).join('');
+  PROJECTS.forEach(p=>{ p.cat=CATMAP[p.name]||'tools'; });
   document.getElementById('grid').innerHTML=PROJECTS.map((p,i)=>{
     const pfs=p.pf.map(pill).join('');
-    return `<div class="card" data-i="${i}" tabindex="0" role="button" aria-label="Details for ${esc(p.name)}"><h3><span class="k">${esc(p.k)}</span>${esc(p.name)}</h3><div class="pfs">${pfs}</div><p class="desc">${esc(p.desc)}</p><div class="acts">${actsHtml(p)}</div><div class="more">▸ tap for details</div></div>`;
+    return `<div class="card" data-i="${i}" data-cat="${p.cat}" tabindex="0" role="button" aria-label="Details for ${esc(p.name)}"><h3><span class="k">${esc(p.k)}</span>${esc(p.name)}</h3><div class="pfs">${pfs}</div><p class="desc">${esc(p.desc)}</p><div class="acts">${actsHtml(p)}</div><div class="more">▸ tap for details</div></div>`;
   }).join('');
   document.getElementById('legend').innerHTML='<span>Runs on:</span> '+Object.keys(PF).map(pill).join('')
     +' <span>· Web runs in any phone or desktop browser, iPhone included.</span>';
+
+  // --- category tabs / filtering ---
+  const count=id=>id==='all'?PROJECTS.length:PROJECTS.filter(p=>p.cat===id).length;
+  const tabsEl=document.getElementById('tabs');
+  tabsEl.innerHTML=CATS.map((c,i)=>
+    `<button class="tab${i===0?' on':''}" role="tab" aria-selected="${i===0}" data-cat="${c.id}">${esc(c.l)} <span class="n">${count(c.id)}</span></button>`
+  ).join('');
+  function filter(cat){
+    for(const card of document.querySelectorAll('#grid .card'))
+      card.style.display=(cat==='all'||card.dataset.cat===cat)?'':'none';
+    for(const b of tabsEl.querySelectorAll('.tab')){
+      const on=b.dataset.cat===cat; b.classList.toggle('on',on); b.setAttribute('aria-selected',on);
+    }
+  }
+  tabsEl.addEventListener('click',e=>{ const b=e.target.closest('.tab'); if(b) filter(b.dataset.cat); });
 
   // --- detail modal ---
   const ovl=document.getElementById('ovl'), mbody=document.getElementById('mbody');
