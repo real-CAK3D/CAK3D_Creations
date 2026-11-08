@@ -482,7 +482,11 @@
         if(!r.ok) continue;
         const j=await r.json();
         const apk=(j.assets||[]).find(x=>/\.apk$/i.test(x.name));
-        if(apk&&apk.browser_download_url){ a.href=apk.browser_download_url; a.setAttribute('download',apk.name); a.removeAttribute('target'); }
+        // A plain link, exactly like the asset link on GitHub's release page. No `download`
+        // attribute: on Chrome for Android, `download` on a cross-origin link that redirects
+        // (github.com → release-assets.githubusercontent.com) leaves the download stuck at the
+        // end. GitHub's own Content-Disposition header already makes it a download.
+        if(apk&&apk.browser_download_url){ a.href=apk.browser_download_url; a.removeAttribute('download'); a.removeAttribute('target'); a.rel='nofollow'; }
       }catch{}
     }
   })();
