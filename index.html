@@ -123,6 +123,40 @@
   footer{border-top:1px solid var(--line);padding:30px 0 48px;color:var(--muted);font-family:var(--mono);font-size:13px}
   .foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
   .foot a:hover{color:var(--cyan)}
+
+  /* clickable cards + "details" hint */
+  .card{cursor:pointer}
+  .card .more{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:8px;opacity:0;transition:.15s}
+  .card:hover .more{opacity:1;color:var(--cyan)}
+
+  /* detail modal */
+  .ovl{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:20px;
+    background:rgba(4,8,5,.72);backdrop-filter:blur(6px)}
+  .ovl.open{display:flex}
+  .modal{position:relative;width:100%;max-width:640px;max-height:88vh;overflow-y:auto;
+    border:1px solid var(--line);border-radius:20px;background:linear-gradient(180deg,var(--panel),var(--panel2));
+    box-shadow:0 30px 80px rgba(0,0,0,.6);animation:pop .18s ease-out}
+  @keyframes pop{from{transform:translateY(14px) scale(.98);opacity:0}to{transform:none;opacity:1}}
+  .modal::before{content:"";position:absolute;inset:0;border-radius:20px;pointer-events:none;background:
+    radial-gradient(520px 200px at 10% -10%,rgba(95,211,106,.14),transparent 60%),
+    radial-gradient(460px 200px at 96% 0%,rgba(232,135,58,.12),transparent 60%)}
+  .mbody{position:relative;padding:26px 26px 28px}
+  .mclose{position:absolute;top:14px;right:16px;z-index:2;font-family:var(--mono);font-size:20px;line-height:1;
+    color:var(--muted);background:none;border:none;cursor:pointer;padding:6px}
+  .mclose:hover{color:var(--cyan)}
+  .mk{font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--amber)}
+  .mtitle{font-size:clamp(24px,5vw,34px);margin:6px 0 10px;letter-spacing:-.5px}
+  .mtitle .m{color:var(--cyan)}
+  .modal .pfs{margin:0 0 16px}
+  .mlead{color:var(--ink);font-size:15px;margin:0 0 18px}
+  .muse{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:rgba(255,255,255,.02);margin:0 0 18px}
+  .muse .lbl{font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--mag);display:block;margin-bottom:4px}
+  .muse p{margin:0;color:var(--ink);font-size:14px}
+  .mfeat{list-style:none;padding:0;margin:0 0 20px;display:grid;gap:9px}
+  .mfeat li{position:relative;padding-left:22px;color:var(--muted);font-size:14px}
+  .mfeat li::before{content:"▸";position:absolute;left:4px;top:0;color:var(--cyan)}
+  .mfeat li b{color:var(--ink);font-weight:500}
+  .modal .acts{margin-top:4px}
 </style>
 </head>
 <body>
@@ -184,6 +218,13 @@
     <a href="#creations">Builds</a>
   </span>
 </div></footer>
+
+<div class="ovl" id="ovl" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mtitle">
+    <button class="mclose" id="mclose" aria-label="Close">✕</button>
+    <div class="mbody" id="mbody"></div>
+  </div>
+</div>
 
 <script>
 // Living woods: starfield + pine treeline + a flickering campfire with rising embers,
@@ -300,65 +341,129 @@
   const PROJECTS=[
     {name:'Flying Flocks', k:'WARDRIVE · RF', pf:['android','esp32'],
      desc:'Drive and the invisible lights up — Wi-Fi, Bluetooth, sub-GHz, cameras, mesh and aircraft, mapped live and scored. Runs on a fleet of ESP32-C5 "Biscuit" boards or just the phone.',
+     use:'Grab the phone (and a Biscuit board if you have one), start a scan, and drive. The RF around you drops onto a live map you can share, score and come back to.',
+     feats:['<b>Multi-band wardriving</b> — Wi-Fi APs & stations, Bluetooth/BLE, sub-GHz and plate cameras, all geo-tagged','<b>ESP32-C5 "Biscuit" fleet</b> or phone-only — external boards feed the same map over USB','<b>Live online layer</b> — sightings sync to a shared map with leaderboards and territory','<b>ESP Marauder support</b> — plug one in over USB and its scans plot straight onto your map'],
      links:[{t:'Download APK',u:R+'FlyingFlocks/releases/latest',go:1,apk:1},{t:'Source',u:R+'FlyingFlocks'}]},
     {name:'Shelf & Stock', k:'KITCHEN · INVENTORY', pf:['web','android'],
      desc:'Your whole kitchen in your pocket — every cabinet, the fridge and the garage, a smart shopping list, meal planning, and recipes from what you already have.',
+     use:'Log what you own once, then shop, cook and plan from it. "What can I make tonight?" is answered from the shelves you actually have.',
+     feats:['<b>Room-by-room inventory</b> — cabinets, fridge, freezer and garage laid out like your real kitchen','<b>Smart shopping list</b> that knows what you are low on','<b>Meal planning</b> and recipes built from what is already in stock','<b>Phone or browser</b> — same data on either'],
      links:[{t:'Open',u:'https://shelfandstock.vercel.app',go:1},{t:'APK',u:R+'ShelfandStock/releases/latest',apk:1},{t:'Source',u:R+'ShelfandStock'}]},
     {name:'Home Inventory', k:'FAMILY · STORAGE', pf:['web','android'],
      desc:'Find any box on the shelf: photograph the whole storage wall, then "blender → Section 7 › Box 41" and it lights up on a map of the shelves.',
+     use:'Packing a garage or a storage unit? Photograph the wall, tag what is in each box, and never dig through totes again — just search and it points you right at it.',
+     feats:['<b>Photo-mapped shelving</b> — your real storage wall becomes a clickable map','<b>Search any item</b> → it highlights the exact section and box','<b>Box-level contents</b> so nothing gets lost in a tote','<b>Shared across the family</b> on web or Android'],
      links:[{t:'Open',u:'https://home-inventory-37.vercel.app',go:1},{t:'APK',u:R+'HomeInventory/releases/latest',apk:1},{t:'Source',u:R+'HomeInventory'}]},
     {name:'MapPI3', k:'TRAIL · NAV', pf:['android','web','pi'],
      desc:'A phone-first trail companion — plan, launch and navigate hikes with offline route packs and OSM trail geometry, headed for a Raspberry Pi field kit.',
+     use:'Plan a hike at home, download the route pack, and follow it on the trail with no signal — then take it into a dedicated Pi field unit.',
+     feats:['<b>Offline route packs</b> — the whole hike cached before you lose signal','<b>Real OSM trail geometry</b>, not just roads','<b>Plan → launch → navigate</b> in one flow','<b>Raspberry Pi field kit</b> on the roadmap'],
      links:[{t:'APK',u:R+'MapPI3/releases/latest',go:1,apk:1},{t:'Source',u:R+'MapPI3'}]},
     {name:'What the Flock!', k:'SURVEILLANCE · DETECT', pf:['android','web','esp32'],
      desc:'Spot Flock Safety plate cameras on the road — detector firmware on a XIAO ESP32-S3 plus a phone app with camera-aware navigation.',
+     use:'Mount the detector, drive, and the app flags Flock plate-reader cameras as you approach them — mapped and camera-aware on your route.',
+     feats:['<b>XIAO ESP32-S3 detector</b> firmware sniffs for the cameras','<b>Camera-aware navigation</b> in the companion app','<b>Mapped sightings</b> you can review and share','<b>Phone, web or board</b> — use what you have'],
      links:[{t:'APK',u:R+'WhatTheFlock/releases/latest',go:1,apk:1},{t:'Source',u:R+'WhatTheFlock'}]},
     {name:'Foldman', k:'FOLDABLE · MUSIC', pf:['android'],
      desc:'A walkman for the Galaxy Z Fold — folded it\'s a portable cassette player, unfolded it lays down into a deck with real latching keys and VU needles. Six skins. A fork of deveshrai\'s Foldman.',
+     use:'A music player that uses the fold: pocket it closed as a walkman, open it flat as a tape deck. Free YouTube, podcasts, radio and Spotify, six skins.',
+     feats:['<b>Fold-aware UI</b> — cassette player closed, full deck open','<b>Real latching transport keys</b> and live VU needles','<b>Free YouTube, podcasts, radio & Spotify</b> sources','<b>Six skins</b>; a fork of deveshrai\'s Foldman'],
      links:[{t:'Download APK',u:R+'Foldman/releases/latest',go:1,apk:1},{t:'Source',u:R+'Foldman'},{t:'Original',u:'https://github.com/deveshrai/Foldman'}]},
     {name:'GTA-Watch', k:'WEARABLE · FIRMWARE', pf:['esp32','android'],
      desc:'A GTA-style minimap and turn-by-turn watch on an ESP32-S3 AMOLED, with an Android companion app.',
+     use:'Wear it and get a game-style minimap on your wrist — turn-by-turn directions fed from your phone, rendered like a GTA HUD.',
+     feats:['<b>GTA-style minimap</b> on an ESP32-S3 AMOLED watch','<b>Turn-by-turn</b> directions on the wrist','<b>Android companion</b> app feeds the route','<b>Open firmware</b> you can flash yourself'],
      links:[{t:'Download',u:R+'ESP-Watch/releases/latest',go:1},{t:'Source',u:R+'ESP-Watch'}]},
     {name:'Hu-Motian', k:'SENSOR · 3D', pf:['web','esp32'],
      desc:'A human radar: an ESP32 + 24 GHz mmWave sensor with a live 3D room where jointed figures walk, sit and lie down where it senses you.',
+     use:'Point a mmWave sensor at a room and watch a live 3D twin — figures stand, sit and lie down where real people are, no camera involved.',
+     feats:['<b>24 GHz mmWave</b> presence sensing on an ESP32','<b>Live 3D room</b> in the browser','<b>Jointed figures</b> that walk, sit and lie down','<b>Camera-free</b> — motion, not video'],
      links:[{t:'Open',u:'https://hu-motian.vercel.app',go:1},{t:'Firmware',u:R+'Hu-Motian/releases/latest'},{t:'Source',u:R+'Hu-Motian'}]},
     {name:'NostalgiaVue', k:'RETRO · MEDIA', pf:['web','windows'],
      desc:'A 1980s–2000s TV set in your browser — remote, channel guide, static and 770+ channels surfing archive.org, YouTube and your own clips.',
+     use:'Flip on a retro TV and channel-surf — 770+ channels of archive footage, YouTube and your own clips, complete with static between them.',
+     feats:['<b>770+ channels</b> from archive.org, YouTube and your clips','<b>Working remote</b> and channel guide','<b>Static & tuning</b> between channels for the full effect','<b>Browser or Windows app</b>'],
      links:[{t:'Watch',u:'https://nostalgiavue.vercel.app',go:1},{t:'Windows app',u:R+'NostalgiaVue/releases/latest'},{t:'Source',u:R+'NostalgiaVue'}]},
     {name:'Spac3-Gh0st', k:'RASPBERRY PI · RF', pf:['pi','web'],
      desc:'A windowed Pi hacker-companion with a Pwnagotchi-style face — passive Wi-Fi/BT/LAN awareness and a 10-theme glass dashboard for your own lab.',
+     use:'Sit a Pi on your bench and let it watch your own lab — a friendly face reacts to the Wi-Fi/BT/LAN around it on a glass dashboard.',
+     feats:['<b>Pwnagotchi-style face</b> that reacts to the airwaves','<b>Passive</b> Wi-Fi / BT / LAN awareness','<b>10-theme glass dashboard</b>','<b>Your own lab only</b> — passive, not an attack tool'],
      links:[{t:'Release',u:R+'Spac3-Gh0st/releases/latest',go:1},{t:'Source',u:R+'Spac3-Gh0st'}]},
     {name:'TorqueClock', k:'SHOP · TIMER', pf:['android','web'],
      desc:'A phone-first mechanic shift and job timer — clock jobs, tally the day, and keep the shop running on time.',
+     use:'Clock on to a job, clock off when it is done, and the app tallies your day — built for a mechanic\'s shift, not an office timesheet.',
+     feats:['<b>Per-job timers</b> you start and stop on the phone','<b>Daily tally</b> of hours and jobs','<b>Shift tracking</b> for the shop','<b>Phone-first</b>, works in the browser too'],
      links:[{t:'APK',u:R+'Torque-Timer/releases/latest',go:1,apk:1},{t:'Source',u:R+'Torque-Timer'}]},
     {name:'Platform of Things', k:'3D · PORTFOLIO', pf:['web'],
      desc:"A first-person 3D portfolio world — walk through CAK3D's bots, servers, apps, the garage and the trail, each its own little place.",
+     use:'Instead of a list of links, walk through CAK3D\'s work in first person — each project is a place you can visit in a little 3D world.',
+     feats:['<b>First-person 3D</b> portfolio you walk around','<b>Each build is a place</b> — bots, servers, apps, garage, trail','<b>Runs in any browser</b>','<b>A playful front door</b> to everything else here'],
      links:[{t:'Enter',u:'https://real-cak3d.github.io/',go:1},{t:'Source',u:R+'platform-of-things'}]},
     {name:'Tiny Truck', k:'3D · DRIVING', pf:['web'],
      desc:"Drive a little truck around a 3D world of CAK3D's work — physics, dust, and big name-letters in the landing zone.",
+     use:'Drop into a 3D sandbox and drive a little truck around CAK3D\'s world — real physics, kicked-up dust and giant name-letters to explore.',
+     feats:['<b>Drivable truck</b> with real physics and dust','<b>3D world</b> built around CAK3D\'s projects','<b>Big name-letters</b> in the landing zone','<b>Browser, no install</b>'],
      links:[{t:'Drive',u:'https://cak3d-truck.vercel.app',go:1},{t:'Source',u:R+'tiny-truck'}]},
     {name:'3D PC', k:'3D · INTERACTIVE', pf:['web'],
      desc:'An explorable 3D computer — boot it up, sit at the desk and poke around the machine.',
+     use:'Sit down at a virtual desk, power on the machine and poke around — an explorable 3D computer you can actually boot and use.',
+     feats:['<b>Explorable 3D desk</b> and machine','<b>Boot it up</b> and interact','<b>A fun take</b> on a computer you can walk into','<b>Browser-based</b>'],
      links:[{t:'Source',u:R+'3D-PC'}]},
     {name:'The Corner Chronicle', k:'NEWS · PWA', pf:['web'],
      desc:'A newsstand on your home screen — every paper on the rack with its own cover and an unread badge, ringing when a new issue lands.',
+     use:'Add it to your home screen and it becomes a newsstand — each paper on the rack with its own cover, badging and ringing when a fresh issue drops.',
+     feats:['<b>Newsstand rack</b> — every paper with its own cover','<b>Unread badges</b> so you see what is new at a glance','<b>Rings</b> when a new issue lands','<b>Installable PWA</b> on your home screen'],
      links:[{t:'Source',u:R+'NewsStand'}]},
     {name:'NeuroLab', k:'DASHBOARD · SIM', pf:['web'],
      desc:'A browser mission-control dashboard for a living clean-room facility simulation — persistent state and live snapshots.',
+     use:'Run a living clean-room facility from a mission-control screen — the sim keeps ticking and the dashboard shows live, persistent state.',
+     feats:['<b>Mission-control dashboard</b> for a facility sim','<b>Living simulation</b> that keeps running','<b>Persistent state</b> and live snapshots','<b>Browser-based</b>'],
      links:[{t:'Source',u:R+'NeuroLab'}]},
   ];
   const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const pill=k=>{const m=PF[k];return `<span class="pf" style="color:${m.c};border-color:${m.c}55"><i style="background:${m.c}"></i>${m.l}</span>`};
-  document.getElementById('grid').innerHTML=PROJECTS.map(p=>{
+  const actsHtml=p=>p.links.map(l=>{
+    const apk=l.apk?` data-apk-latest="${l.u.replace('https://github.com/','').replace('/releases/latest','')}"`:'';
+    return `<a class="alink${l.go?' go':''}" href="${l.u}" target="_blank" rel="noopener"${apk}>${esc(l.t)}</a>`;
+  }).join('');
+  document.getElementById('grid').innerHTML=PROJECTS.map((p,i)=>{
     const pfs=p.pf.map(pill).join('');
-    const acts=p.links.map(l=>{
-      const apk=l.apk?` data-apk-latest="${l.u.replace('https://github.com/','').replace('/releases/latest','')}"`:'';
-      return `<a class="alink${l.go?' go':''}" href="${l.u}" target="_blank" rel="noopener"${apk}>${esc(l.t)}</a>`;
-    }).join('');
-    return `<div class="card"><h3><span class="k">${esc(p.k)}</span>${esc(p.name)}</h3><div class="pfs">${pfs}</div><p class="desc">${esc(p.desc)}</p><div class="acts">${acts}</div></div>`;
+    return `<div class="card" data-i="${i}" tabindex="0" role="button" aria-label="Details for ${esc(p.name)}"><h3><span class="k">${esc(p.k)}</span>${esc(p.name)}</h3><div class="pfs">${pfs}</div><p class="desc">${esc(p.desc)}</p><div class="acts">${actsHtml(p)}</div><div class="more">▸ tap for details</div></div>`;
   }).join('');
   document.getElementById('legend').innerHTML='<span>Runs on:</span> '+Object.keys(PF).map(pill).join('')
     +' <span>· Web runs in any phone or desktop browser, iPhone included.</span>';
+
+  // --- detail modal ---
+  const ovl=document.getElementById('ovl'), mbody=document.getElementById('mbody');
+  function openModal(p){
+    const pfs=p.pf.map(pill).join('');
+    const feats=(p.feats||[]).map(f=>`<li>${f}</li>`).join('');
+    mbody.innerHTML=
+      `<div class="mk">${esc(p.k)}</div>`+
+      `<h2 class="mtitle" id="mtitle">${esc(p.name)}</h2>`+
+      `<div class="pfs">${pfs}</div>`+
+      `<p class="mlead">${esc(p.desc)}</p>`+
+      (p.use?`<div class="muse"><span class="lbl">WHAT IT'S FOR</span><p>${esc(p.use)}</p></div>`:'')+
+      (feats?`<ul class="mfeat">${feats}</ul>`:'')+
+      `<div class="acts">${actsHtml(p)}</div>`;
+    ovl.classList.add('open'); ovl.setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden';
+    document.getElementById('mclose').focus();
+  }
+  function closeModal(){ ovl.classList.remove('open'); ovl.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
+  document.getElementById('grid').addEventListener('click',e=>{
+    if(e.target.closest('.acts')) return;            // let real links do their thing
+    const card=e.target.closest('.card'); if(!card) return;
+    openModal(PROJECTS[+card.dataset.i]);
+  });
+  document.getElementById('grid').addEventListener('keydown',e=>{
+    if(e.key!=='Enter'&&e.key!==' ') return;
+    const card=e.target.closest('.card'); if(!card) return;
+    e.preventDefault(); openModal(PROJECTS[+card.dataset.i]);
+  });
+  document.getElementById('mclose').addEventListener('click',closeModal);
+  ovl.addEventListener('click',e=>{ if(e.target===ovl) closeModal(); });
+  addEventListener('keydown',e=>{ if(e.key==='Escape'&&ovl.classList.contains('open')) closeModal(); });
 
   // Point every "APK" button straight at the latest release's .apk asset, so a tap on
   // a phone downloads the file instead of landing on GitHub's release page (where the
