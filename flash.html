@@ -201,6 +201,9 @@
   const R='https://github.com/real-CAK3D/';
   // status: 'ready' => live flash button; 'building' => firmware not hosted yet
   const FW=[
+    {name:'Flocked Up', board:'LilyGo T-Embed CC1101 Plus', chip:'ESP32-S3',
+     desc:'Crow-themed standalone Flipper-style firmware: sub-GHz (CC1101) + Wi-Fi + BLE + NFC + IR, SD browser and a pixel-art crow. Flash = standalone (replaces other firmware); Download = app image for bmorcelli’s Launcher (copy to the SD /downloads folder).',
+     manifest:'firmware/flockedup/manifest.json', src:R+'FlockedUp', dl:'firmware/flockedup/FlockedUp.bin', status:'ready'},
     {name:'Flying Flocks — Biscuit', board:'Seeed XIAO ESP32-C5', chip:'ESP32-C5',
      desc:'The "Biscuit" wardrive node: Wi-Fi + Bluetooth scanning and Meshtastic mesh, feeding the Flying Flocks app.',
      manifest:'firmware/biscuit/manifest.json', src:R+'FlyingFlocks', status:'ready'},
@@ -236,7 +239,7 @@
       <div class="board">${esc(f.board)}</div>
       ${chip}
       <p class="desc">${esc(f.desc)}</p>
-      <div class="flashrow">${flash}<a class="src" href="${esc(f.src)}" target="_blank" rel="noopener">Source ↗</a></div>
+      <div class="flashrow">${flash}${f.dl?`<a class="src" href="${esc(f.dl)}" download>⬇ Download</a>`:''}<a class="src" href="${esc(f.src)}" target="_blank" rel="noopener">Source ↗</a></div>
     </div>`;
   }).join('');
 })();

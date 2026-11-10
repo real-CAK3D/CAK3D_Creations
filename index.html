@@ -366,12 +366,17 @@
     {id:'world', l:'3D & Sim'},
   ];
   const CATMAP={
-    'Flying Flocks':'rf','What the Flock!':'rf','Spac3-Gh0st':'rf','Hu-Motian':'rf',
+    'Flocked Up':'rf','Flying Flocks':'rf','What the Flock!':'rf','Spac3-Gh0st':'rf','Hu-Motian':'rf',
     'Shelf & Stock':'tools','Home Inventory':'tools','MapPI3':'tools','TorqueClock':'tools','GTA-Watch':'tools',
     'Foldman':'media','Classipod':'media','NostalgiaVue':'media','The Corner Chronicle':'media',
     'Platform of Things':'world','Tiny Truck':'world','3D PC':'world','NeuroLab':'world',
   };
   const PROJECTS=[
+    {name:'Flocked Up', k:'SUB-GHZ · FIRMWARE', pf:['esp32'],
+     desc:'Crow-themed standalone Flipper-style firmware for the LilyGo T-Embed CC1101 Plus — sub-GHz, Wi-Fi, BLE, NFC and IR with a pixel-art crow, part of the Flying Flocks fleet.',
+     use:'Flash it to a T-Embed (standalone) or drop the app image on the SD card for bmorcelli’s Launcher, then drive the crow menu with the encoder.',
+     feats:['<b>CC1101 sub-GHz</b> — scan + decode (TPMS, weather, PT2262/EV1527 remotes)','<b>Wi-Fi + BLE recon</b> feeding the Flying Flocks app','<b>NFC (PN532) + IR</b> read / send','<b>SD browser + pixel-art crow UI</b> under bmorcelli’s Launcher'],
+     links:[{t:'Flash / Download',u:'flash.html',go:1},{t:'Release',u:R+'FlockedUp/releases/latest'},{t:'Source',u:R+'FlockedUp'}]},
     {name:'Flying Flocks', k:'WARDRIVE · RF', pf:['android','esp32'],
      desc:'Drive and the invisible lights up — Wi-Fi, Bluetooth, sub-GHz, cameras, mesh and aircraft, mapped live and scored. Runs on a fleet of ESP32-C5 "Biscuit" boards or just the phone.',
      use:'Grab the phone (and a Biscuit board if you have one), start a scan, and drive. The RF around you drops onto a live map you can share, score and come back to.',
