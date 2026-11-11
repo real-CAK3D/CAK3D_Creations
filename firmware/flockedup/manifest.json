@@ -1,6 +1,6 @@
-{
+﻿{
   "name": "Flocked Up",
-  "version": "v0.10.0",
+  "version": "v0.11.0",
   "new_install_prompt_erase": true,
   "builds": [
     {
@@ -11,3 +11,4 @@
     }
   ]
 }
+
