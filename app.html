@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>CAK3D_Creations — build</title>
+<meta name="description" content="A CAK3D_Creations build — full rundown, features and downloads." />
+<meta name="theme-color" content="#070c08" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#070b09; --panel:#0e140d; --panel2:#0b110a; --ink:#e7f0e2; --muted:#8fa189;
+    --line:rgba(140,170,120,.16);
+    /* per-app theme — set from the catalog by JS; these are only fallbacks */
+    --a:#5fd36a; --b:#f0b429;
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --disp:'Space Grotesk',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--disp);-webkit-font-smoothing:antialiased;
+    overflow-x:hidden;line-height:1.6}
+  a{color:inherit;text-decoration:none}
+  canvas#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;opacity:.85}
+  .wrap{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:0 20px}
+  .mono{font-family:var(--mono)}
+
+  header{position:sticky;top:0;z-index:5;backdrop-filter:blur(10px);
+    background:linear-gradient(to bottom,rgba(7,11,9,.92),rgba(7,11,9,.5));border-bottom:1px solid var(--line)}
+  nav{display:flex;align-items:center;justify-content:space-between;height:58px}
+  .logo{font-family:var(--mono);font-weight:700;letter-spacing:.5px;font-size:15px}
+  .logo b{color:var(--a)} .logo i{color:var(--b);font-style:normal}
+  .back{font-family:var(--mono);font-size:13px;color:var(--muted);display:inline-flex;gap:6px;align-items:center}
+  .back:hover{color:var(--a)}
+  .navlinks{display:flex;gap:20px;font-family:var(--mono);font-size:13px;color:var(--muted)}
+  .navlinks a:hover{color:var(--a)}
+  @media(max-width:600px){.navlinks{display:none}}
+
+  /* hero — tinted by the app's own theme */
+  .hero{position:relative;padding:72px 0 30px;overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:0;pointer-events:none;background:
+    radial-gradient(640px 280px at 8% -10%,color-mix(in srgb,var(--a) 26%,transparent),transparent 62%),
+    radial-gradient(560px 280px at 98% 0%,color-mix(in srgb,var(--b) 22%,transparent),transparent 60%)}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:3px;color:var(--a);opacity:.95}
+  .htitle{font-size:clamp(36px,9vw,84px);line-height:.98;margin:12px 0 10px;font-weight:700;letter-spacing:-1.5px;
+    background:linear-gradient(92deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent;
+    overflow-wrap:break-word;word-break:break-word}
+  .lead{font-size:clamp(16px,2.6vw,20px);color:var(--ink);max-width:680px;margin:0 0 18px}
+  .pfs{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 22px}
+  .pf{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;font-weight:700;
+    letter-spacing:.3px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);white-space:nowrap}
+  .pf i{width:7px;height:7px;border-radius:50%;display:inline-block}
+  .cta{display:flex;gap:10px;flex-wrap:wrap}
+  .btn{font-family:var(--mono);font-size:14px;font-weight:700;padding:13px 20px;border-radius:12px;
+    border:1px solid var(--line);background:var(--panel);transition:.15s;display:inline-flex;align-items:center;gap:8px}
+  .btn:hover{transform:translateY(-2px)}
+  .btn.primary{background:linear-gradient(92deg,var(--a),var(--b));color:#05080c;border:none;
+    box-shadow:0 0 30px color-mix(in srgb,var(--a) 35%,transparent)}
+  .btn.ghost:hover{border-color:var(--a);color:var(--a)}
+
+  section{padding:30px 0}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:2px;color:var(--b)}
+  h2{font-size:clamp(22px,4.5vw,32px);margin:6px 0 14px;letter-spacing:-.5px}
+  .panel{border:1px solid var(--line);border-radius:18px;padding:22px 24px;
+    background:linear-gradient(180deg,var(--panel),var(--panel2));position:relative;overflow:hidden}
+  .panel::before{content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(520px 200px at 0% -20%,color-mix(in srgb,var(--a) 10%,transparent),transparent 60%)}
+  .use{font-size:16px;color:var(--ink);margin:0;position:relative}
+  .long{color:var(--muted);max-width:720px;margin:14px 0 0;position:relative}
+
+  .feat{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+  .feat li{position:relative;padding-left:26px;color:var(--muted);font-size:15px}
+  .feat li::before{content:"▸";position:absolute;left:6px;top:0;color:var(--a)}
+  .feat li b{color:var(--ink);font-weight:600}
+
+  .dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:4px}
+  .dlc{border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:var(--panel);transition:.15s;
+    display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .dlc:hover{border-color:var(--a);transform:translateY(-2px)}
+  .dlc .t{font-family:var(--mono);font-size:14px;font-weight:700}
+  .dlc .arr{color:var(--a);font-family:var(--mono)}
+  .dlc.go{background:linear-gradient(92deg,color-mix(in srgb,var(--a) 22%,var(--panel)),color-mix(in srgb,var(--b) 18%,var(--panel)));border-color:transparent}
+  .dlc.go .arr{color:var(--ink)}
+
+  footer{border-top:1px solid var(--line);padding:28px 0 46px;color:var(--muted);font-family:var(--mono);font-size:13px;margin-top:20px}
+  .foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  .foot a:hover{color:var(--a)}
+  .nf{padding:120px 0;text-align:center;color:var(--muted);font-family:var(--mono)}
+  .nf a{color:var(--a)}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+
+<header><div class="wrap"><nav>
+  <a class="back" href="index.html#creations">◂ CAK3D_Creations</a>
+  <div class="navlinks">
+    <a href="index.html#creations">Builds</a>
+    <a href="flash.html">Flash</a>
+    <a href="https://github.com/real-CAK3D" target="_blank" rel="noopener">GitHub ↗</a>
+  </div>
+</nav></div></header>
+
+<main class="wrap" id="main"><!-- rendered by JS --></main>
+
+<footer><div class="wrap foot">
+  <span>© 2026 CAK3D_Creations</span>
+  <span><a href="index.html#creations">◂ Back to all builds</a></span>
+</div></footer>
+
+<script src="catalog.js"></script>
+<script>
+(function(){
+  const {PF,PROJECTS}=window.CAK3D;
+  const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const id=new URLSearchParams(location.search).get('id');
+  const p=PROJECTS.find(x=>x.slug===id);
+  const main=document.getElementById('main');
+
+  if(!p){
+    document.title='CAK3D_Creations — not found';
+    main.innerHTML='<div class="nf">That build wasn’t found. <a href="index.html#creations">Back to all builds ▸</a></div>';
+    startBg('#5fd36a','#f0b429');
+    return;
+  }
+
+  // Apply the app's own theme.
+  const a=(p.th&&p.th.a)||'#5fd36a', b=(p.th&&p.th.b)||'#f0b429';
+  document.documentElement.style.setProperty('--a',a);
+  document.documentElement.style.setProperty('--b',b);
+  document.title='CAK3D — '+p.name;
+  document.querySelector('meta[name=theme-color]').setAttribute('content',a);
+
+  const pill=k=>{const m=PF[k];return `<span class="pf" style="color:${m.c};border-color:${m.c}55"><i style="background:${m.c}"></i>${m.l}</span>`};
+  const pfs=p.pf.map(pill).join('');
+  const feats=(p.feats||[]).map(f=>`<li>${f}</li>`).join('');
+
+  // The primary CTA is the build's "go" link (download / open); fall back to the first link.
+  const primary=p.links.find(l=>l.go)||p.links[0];
+
+  const dlCard=l=>{
+    const repo=l.apk?l.u.replace('https://github.com/','').replace('/releases/latest',''):null;
+    const apk=repo?` data-apk-latest="${repo}"`:'';
+    return `<a class="dlc${l.go?' go':''}" href="${l.u}" target="_blank" rel="noopener"${apk}><span class="t">${esc(l.t)}</span><span class="arr">▸</span></a>`;
+  };
+
+  main.innerHTML=
+    `<div class="hero">`+
+      `<div class="kicker mono">// ${esc(p.k)}</div>`+
+      `<h1 class="htitle">${esc(p.name)}</h1>`+
+      `<p class="lead">${esc(p.desc)}</p>`+
+      `<div class="pfs">${pfs}</div>`+
+      `<div class="cta">`+
+        (primary?`<a class="btn primary" href="${primary.u}"${primary.apk?` data-apk-latest="${primary.u.replace('https://github.com/','').replace('/releases/latest','')}"`:''} target="_blank" rel="noopener">▾ ${esc(primary.t)}</a>`:'')+
+        `<a class="btn ghost" href="index.html#creations">◂ All builds</a>`+
+      `</div>`+
+    `</div>`+
+    (p.use?`<section><div class="eyebrow mono">// WHAT IT'S FOR</div><div class="panel"><p class="use">${esc(p.use)}</p>${p.long?`<p class="long">${esc(p.long)}</p>`:''}</div></section>`:'')+
+    (feats?`<section><div class="eyebrow mono">// WHAT'S INSIDE</div><h2>Features</h2><ul class="feat">${feats}</ul></section>`:'')+
+    `<section><div class="eyebrow mono">// GET IT</div><h2>Download & links</h2><div class="dl">${p.links.map(dlCard).join('')}</div></section>`;
+
+  startBg(a,b);
+
+  // Point APK buttons straight at the latest release's .apk asset (public repos only).
+  (async()=>{
+    for(const el of document.querySelectorAll('[data-apk-latest]')){
+      const repo=el.getAttribute('data-apk-latest');
+      try{
+        const r=await fetch(`https://api.github.com/repos/${repo}/releases/latest`,{headers:{Accept:'application/vnd.github+json'}});
+        if(!r.ok) continue;
+        const j=await r.json();
+        const apk=(j.assets||[]).find(x=>/\.apk$/i.test(x.name));
+        if(apk&&apk.browser_download_url){ el.href=apk.browser_download_url; el.removeAttribute('target'); el.rel='nofollow'; }
+      }catch{}
+    }
+  })();
+
+  // Lightweight themed particle field — the app's two accent colours drifting over the dark.
+  function startBg(ca,cb){
+    const c=document.getElementById('bg'), x=c.getContext('2d');
+    const cols=[ca,cb,'#ffe7a3'];
+    let W,H,dots,t=0;
+    function size(){ const cw=document.documentElement.clientWidth, ch=document.documentElement.clientHeight;
+      W=c.width=cw*devicePixelRatio; H=c.height=ch*devicePixelRatio; seed(); }
+    function seed(){ const n=Math.min(70,Math.floor(W*H/32000)); dots=[];
+      for(let i=0;i<n;i++) dots.push({px:Math.random()*W,py:Math.random()*H,
+        vx:(Math.random()-.5)*.22*devicePixelRatio,vy:(Math.random()-.5)*.22*devicePixelRatio,
+        r:(Math.random()*1.6+.6)*devicePixelRatio,col:cols[(Math.random()*cols.length)|0],ph:Math.random()*6.28}); }
+    function frame(){ const dpr=devicePixelRatio; t+=0.012; x.clearRect(0,0,W,H);
+      for(let i=0;i<dots.length;i++){ for(let j=i+1;j<dots.length;j++){
+        const a=dots[i],b=dots[j],dx=a.px-b.px,dy=a.py-b.py,d=Math.hypot(dx,dy),lim=130*dpr;
+        if(d<lim){ x.globalAlpha=(1-d/lim)*.1; x.strokeStyle=ca; x.lineWidth=dpr; x.beginPath();
+          x.moveTo(a.px,a.py); x.lineTo(b.px,b.py); x.stroke(); } }}
+      x.globalAlpha=1;
+      for(const p of dots){ p.px+=p.vx; p.py+=p.vy;
+        if(p.px<0)p.px+=W; if(p.px>W)p.px-=W; if(p.py<0)p.py+=H; if(p.py>H)p.py-=H;
+        const pulse=(Math.sin(t*2+p.ph)*.5+.5);
+        x.globalAlpha=.22+pulse*.5; x.fillStyle=p.col;
+        x.beginPath(); x.arc(p.px,p.py,p.r+pulse*1.3*dpr,0,7); x.fill();
+        x.globalAlpha=.07; x.beginPath(); x.arc(p.px,p.py,(p.r+pulse*1.3*dpr)*3,0,7); x.fill(); }
+      x.globalAlpha=1; requestAnimationFrame(frame); }
+    addEventListener('resize',size); size(); frame();
+  }
+})();
+</script>
+</body>
+</html>
