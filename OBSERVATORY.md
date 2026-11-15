@@ -1,37 +1,20 @@
-# Observatory
+# Observatory: app usage pings
 
-`observatory.html` ranks every build in `catalog.js` by how much it's actually used.
-A daily GitHub Action (`.github/workflows/observatory.yml`) runs
-`scripts/observatory.mjs`, which writes `data/observatory.json`: a current snapshot
-plus a daily history per app. Each data source switches on when its secret exists.
+The Observatory dashboard lives on the main site at
+https://real-cak3d.github.io/observatory.html (see `OBSERVATORY.md` in the
+`real-CAK3D.github.io` repo). This hub hosts the part that needs a server: the
+endpoint apps send their anonymous "opened" pings to, which gives the dashboard
+daily, weekly and monthly active users per app.
 
-| Source | What it adds | Needs |
-|---|---|---|
-| GitHub releases | Downloads per release, stars, last push | Nothing (works now) |
-| Repo traffic | Repo views and clones per day | `OBS_GH_TOKEN` secret |
-| Web analytics | Visits to the Vercel-hosted apps | Web Analytics on + `VERCEL_TOKEN` |
-| Live app pings | Daily/weekly/monthly active users, versions in use | Upstash Redis on Vercel |
+Only apps listed in `catalog.js` are accepted, so a new build can send pings as
+soon as it's added there.
 
-New apps need no changes here: add them to `catalog.js` and they're tracked.
+## Turning it on
 
-## Turning sources on
-
-**Repo traffic.** GitHub only shows repo views to accounts with admin access, so the
-default Actions token can't read them. Create a fine-grained token at
-GitHub → Settings → Developer settings → Fine-grained tokens: resource owner
-`real-CAK3D`, all repositories, **Administration: Read-only** (nothing else).
-Add it to this repo as the Actions secret `OBS_GH_TOKEN`.
-
-**Web analytics.** In Vercel, open each web project (shelfandstock, home-inventory,
-hu-motian, nostalgiavue, cak3d-truck) → Analytics → Enable. Then create a token
-at Vercel → Account Settings → Tokens and add it as the secret `VERCEL_TOKEN`,
-plus `VERCEL_TEAM_ID` = `team_h7Xl4dYyZwWCJ4Xf8iP7hRu8`.
-
-**Live app pings.** In the `cak3d_creations` Vercel project → Storage → Create →
-Upstash for Redis (free tier). Vercel adds `KV_REST_API_URL` and `KV_REST_API_TOKEN`
-to the project automatically, which switches `/api/ping` and `/api/activity` on.
-Copy the same two values into this repo's Actions secrets so the daily snapshot
-records them too.
+In the `cak3d_creations` Vercel project → Storage → Create → Upstash for Redis
+(free tier). Vercel adds `KV_REST_API_URL` and `KV_REST_API_TOKEN` to the project
+automatically, which switches `/api/ping` and `/api/activity` on; redeploy once.
+Nothing else needs the credentials: the main site reads the public `/api/activity`.
 
 Until storage is connected, `/api/ping` answers `503` and apps just ignore it.
 
