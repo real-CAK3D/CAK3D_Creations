@@ -23,7 +23,7 @@
   ];
 
   const CATMAP = {
-    'Flocked Up': 'rf', 'Flying Flocks': 'rf', 'What the Flock!': 'rf', 'Spac3-Gh0st': 'rf', 'Hu-Motian': 'rf',
+    'Flocked Up': 'rf', 'Flying Flocks': 'rf', 'What the Flock!': 'rf', 'MaurCAK3D': 'rf', 'Spac3-Gh0st': 'rf', 'Hu-Motian': 'rf',
     'Shelf & Stock': 'tools', 'Home Inventory': 'tools', 'MapPI3': 'tools', 'TorqueClock': 'tools', 'GTA-Watch': 'tools',
     'Foldman': 'media', 'Classipod': 'media', 'NostalgiaVue': 'media', 'The Corner Chronicle': 'media',
     'Platform of Things': 'world', 'Tiny Truck': 'world', '3D PC': 'world', 'NeuroLab': 'world',
@@ -67,6 +67,13 @@
       use: 'Mount the detector, drive, and the app flags Flock plate-reader cameras as you approach them — mapped and camera-aware on your route.',
       feats: ['<b>XIAO ESP32-S3 detector</b> firmware sniffs for the cameras', '<b>Camera-aware navigation</b> in the companion app', '<b>Mapped sightings</b> you can review and share', '<b>Phone, web or board</b> — use what you have'],
       links: [{ t: 'APK', u: R + 'WhatTheFlock/releases/latest', go: 1, apk: 1 }, { t: 'Source', u: R + 'WhatTheFlock' }] },
+
+    { name: 'MaurCAK3D', k: 'WI-FI RECON · FIRMWARE', pf: ['esp32'], th: { a: '#5bc8b0', b: '#b24bff' }, motif: 'crow',
+      desc: 'An ESP32 Marauder fork for the XIAO ESP32-C5 that joins the Flying Flocks fleet over BLE — Wi-Fi recon that streams straight onto your map, no cable.',
+      use: 'Flash it to a XIAO ESP32-C5 and its Wi-Fi scans and telemetry stream over BLE into the Flying Flocks app like any Biscuit board — tether it over USB or leave it wireless.',
+      feats: ['<b>ESP32 Marauder</b> Wi-Fi recon — scan APs & stations, probe/packet sniff — on a XIAO ESP32-C5', '<b>Biscuit BLE bridge</b> — joins the Flying Flocks fleet wirelessly, its scans plot straight onto the map', '<b>DATA:HEALTH telemetry</b> — live heap, uptime and status in the app\'s Fleet Health view', '<b>USB or BLE</b> — the same newline protocol over a cable or over the air'],
+      long: 'MaurCAK3D is the Flying Flocks fleet\'s take on the ESP32 Marauder: justcallmekoko\'s Wi-Fi recon firmware with a Biscuit bridge grafted on, so a XIAO ESP32-C5 running it shows up in the app over BLE exactly like a Biscuit board and streams its scans onto the shared map. Built with -DBISCUIT_BRIDGE, it mirrors the same line protocol over USB-CDC and BLE.',
+      links: [{ t: 'Source', u: R + 'MaurCAK3D' }, { t: 'Upstream', u: 'https://github.com/justcallmekoko/ESP32Marauder' }] },
 
     { name: 'Foldman', k: 'FOLDABLE · MUSIC', pf: ['android'], th: { a: '#f0722b', b: '#c4501a' }, motif: 'tech',
       desc: 'A walkman for the Galaxy Z Fold — folded it\'s a portable cassette player, unfolded it lays down into a deck with real latching keys and VU needles. Free radio, podcasts, YouTube audio and Spotify, six skins. A fork of deveshrai\'s Foldman.',
