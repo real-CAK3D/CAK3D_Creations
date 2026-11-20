@@ -73,7 +73,7 @@
       use: 'Flash it to a XIAO ESP32-C5 and its Wi-Fi scans and telemetry stream over BLE into the Flying Flocks app like any Biscuit board — tether it over USB or leave it wireless.',
       feats: ['<b>ESP32 Marauder</b> Wi-Fi recon — scan APs & stations, probe/packet sniff — on a XIAO ESP32-C5', '<b>Biscuit BLE bridge</b> — joins the Flying Flocks fleet wirelessly, its scans plot straight onto the map', '<b>DATA:HEALTH telemetry</b> — live heap, uptime and status in the app\'s Fleet Health view', '<b>USB or BLE</b> — the same newline protocol over a cable or over the air'],
       long: 'MaurCAK3D is the Flying Flocks fleet\'s take on the ESP32 Marauder: justcallmekoko\'s Wi-Fi recon firmware with a Biscuit bridge grafted on, so a XIAO ESP32-C5 running it shows up in the app over BLE exactly like a Biscuit board and streams its scans onto the shared map. Built with -DBISCUIT_BRIDGE, it mirrors the same line protocol over USB-CDC and BLE.',
-      links: [{ t: 'Source', u: R + 'MaurCAK3D' }, { t: 'Upstream', u: 'https://github.com/justcallmekoko/ESP32Marauder' }] },
+      links: [{ t: 'Flash / Download', u: 'flash.html', go: 1 }, { t: 'Release', u: R + 'MaurCAK3D/releases/latest' }, { t: 'Source', u: R + 'MaurCAK3D' }, { t: 'Upstream', u: 'https://github.com/justcallmekoko/ESP32Marauder' }] },
 
     { name: 'Foldman', k: 'FOLDABLE · MUSIC', pf: ['android'], th: { a: '#f0722b', b: '#c4501a' }, motif: 'tech',
       desc: 'A walkman for the Galaxy Z Fold — folded it\'s a portable cassette player, unfolded it lays down into a deck with real latching keys and VU needles. Free radio, podcasts, YouTube audio and Spotify, six skins. A fork of deveshrai\'s Foldman.',

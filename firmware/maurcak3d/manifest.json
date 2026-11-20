@@ -1,0 +1,13 @@
+{
+  "name": "MaurCAK3D",
+  "version": "v1.0.0",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32-C5",
+      "parts": [
+        { "path": "maurcak3d-merged-0x0.bin", "offset": 0 }
+      ]
+    }
+  ]
+}
