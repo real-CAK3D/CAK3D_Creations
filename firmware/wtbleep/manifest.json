@@ -1,6 +1,6 @@
 {
   "name": "wtBLEep",
-  "version": "latest",
+  "version": "v1.0.0",
   "new_install_prompt_erase": true,
   "builds": [
     {
