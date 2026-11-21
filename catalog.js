@@ -2,7 +2,8 @@
    Single source of truth for the landing grid (index.html) and the per-app
    pages (app.html). Add a build once here and it shows up in both.
    Each project also carries a `th` theme {a,b} so its app page is coloured
-   for the app it hosts. */
+   for the app it hosts. `wip: true` marks a build that's still in the
+   workshop: it gets a WORK IN PROGRESS badge and its own tab. */
 (function () {
   const R = 'https://github.com/real-CAK3D/';
 
@@ -12,21 +13,30 @@
     windows: { l: 'Windows',      c: '#c0a978' },
     pi:      { l: 'Raspberry Pi', c: '#e0795f' },
     esp32:   { l: 'ESP32',        c: '#f0b429' },
+    mac:     { l: 'macOS',        c: '#c7c9d1' },
+    linux:   { l: 'Linux',        c: '#f2d16b' },
+    discord: { l: 'Discord',      c: '#8b95f5' },
   };
 
+  // 'wip' is a virtual tab: it lists every build flagged `wip`, whatever its category.
   const CATS = [
     { id: 'all',   l: 'All' },
     { id: 'rf',    l: 'RF & Sensing' },
     { id: 'tools', l: 'Field & Everyday' },
+    { id: 'play',  l: 'Games & Pets' },
     { id: 'media', l: 'Music & Media' },
     { id: 'world', l: '3D & Sim' },
+    { id: 'wip',   l: 'In the Workshop' },
   ];
 
   const CATMAP = {
     'Flocked Up': 'rf', 'Flying Flocks': 'rf', 'What the Flock!': 'rf', 'MaurCAK3D': 'rf', 'Spac3-Gh0st': 'rf', 'Hu-Motian': 'rf',
     'Shelf & Stock': 'tools', 'Home Inventory': 'tools', 'MapPI3': 'tools', 'TorqueClock': 'tools', 'GTA-Watch': 'tools',
+    'Scanimal': 'play', 'Pokédex': 'play', 'CYD Buddy': 'play',
     'Foldman': 'media', 'Classipod': 'media', 'NostalgiaVue': 'media', 'The Corner Chronicle': 'media',
     'Platform of Things': 'world', 'Tiny Truck': 'world', '3D PC': 'world', 'NeuroLab': 'world',
+    'CAK3D-Creations Shop': 'tools', 'Onstell': 'tools', 'CAK3DBot': 'tools', 'Inventory App': 'tools',
+    'Sullivan Connect': 'tools', 'Sullivan Connect App': 'tools',
   };
 
   const PROJECTS = [
@@ -146,12 +156,79 @@
       use: 'Run a living clean-room facility from a mission-control screen — the sim keeps ticking and the dashboard shows live, persistent state.',
       feats: ['<b>Mission-control dashboard</b> for a facility sim', '<b>Living simulation</b> that keeps running', '<b>Persistent state</b> and live snapshots', '<b>Browser-based</b>'],
       links: [{ t: 'Source', u: R + 'NeuroLab' }] },
+
+    { name: 'Scanimal', k: 'POCKET PET · SCANNER', pf: ['android'], th: { a: '#7ee081', b: '#ffb347' }, motif: 'dots',
+      desc: 'A tamagotchi-style pocket buddy you raise by scanning the world — feed it barcodes, QR codes and NFC tags, take it on walks, and let it sniff Wi-Fi, Bluetooth and cell towers on a pulsing radar.',
+      use: 'Hatch an egg, pick a species, and raise it from baby to elder by scanning everyday things and walking with it. No account, no AI service — everything lives on your phone.',
+      feats: ['<b>Feed it by scanning</b> — every barcode, QR code, shipping label, ticket or NFC tag is a food with its own rarity and trait', '<b>11 species</b> with random colours, patterns and personalities', '<b>Walks + GPS</b> — distance, steps and pace, plus a Wi-Fi / Bluetooth / cell radar and satellite stargazing', '<b>Full life sim</b> — vitals, sickness, lives, generations and 85 achievements', '<b>Meets other Scanimals</b> nearby and talks back with a rule-based phrase brain'],
+      long: 'Scanimal is a pocket buddy for Android, raised by scanning the world around you. It grows from Baby to Elder at one buddy-year per real day, gets hungry, sick and bored, and remembers what you told it about yourself. Feeding happens through the camera and NFC, walks count toward its fitness, and a radar shows the signals around you. It works offline, needs no account, and updates itself.',
+      links: [{ t: 'Download APK', u: R + 'Scanimal/releases/latest', go: 1, apk: 1 }, { t: 'Source', u: R + 'Scanimal' }] },
+
+    { name: 'Pokédex', k: 'REAL-WORLD · CATCH', pf: ['android', 'web'], th: { a: '#e3350d', b: '#3b4cca' }, motif: 'dots',
+      desc: 'A real-life Kanto-style Pokédex for your phone — walk a real map to find and catch all 1025 Pokémon, scan them in AR, and raise your buddy TamaPoke-style.',
+      use: 'Open it and you are holding a Pokédex: Pokémon spawn on the map around you, the camera finds them in AR, and everything you catch can be raised on the PET screen.',
+      feats: ['<b>All 1025 Pokémon</b> (Gen 1–9) in the dex and in the wild', '<b>Real map</b> with spawns and stops — walk within 80 m to catch', '<b>AR camera</b> that places Pokémon at their real compass bearing', '<b>TamaPoke pet mode</b> — feed, train, clean and evolve your buddy', '<b>Game Boy mode</b> for your own ROMs, with a two-way save link to the dex'],
+      long: 'Pokédex turns your phone into a Kanto-style Pokédex that works in the real world. A map spawns Pokémon and item stops around you, an AR camera shows them at their real bearing, and every catch or hatch fills in the national dex. Your buddy lives on the PET screen, and a built-in Game Boy mode can read your own Red/Blue/Gold saves and bring your party into the dex.',
+      links: [{ t: 'Download APK', u: R + 'Pokedex/releases/latest', go: 1, apk: 1 }, { t: 'Source', u: R + 'Pokedex' }] },
+
+    { name: 'CYD Buddy', k: 'DESK PET · FIRMWARE', pf: ['esp32'], th: { a: '#5bd1ff', b: '#ff6ad5' }, motif: 'ghost',
+      desc: 'A desk-buddy face for the CYD (ESP32 "Cheap Yellow Display") — animated eyes, moods and touch reactions, with its own life stats, menus and an SD-card phrase bank.',
+      use: 'Flash it to a CYD and it sits on your desk with a face that reacts to you — boop it, pet it, tickle it, feed it — and its moods drift with the time of day.',
+      feats: ['<b>Touch personality</b> — boop, pet, tickle, eye-poke, bored, sleepy and wake reactions', '<b>Mood system</b> with selectable personalities and time-of-day eye colours', '<b>Life stats</b> — health, hunger, play need, anxiety, plus boot and lifetime counters', '<b>On-screen menus</b> for Wi-Fi setup, face, colours and the phrase bank', '<b>SD phrase bank</b> it only writes inside its own folder'],
+      long: 'CYD Buddy turns an ESP32-2432S028R "Cheap Yellow Display" into a little desk companion. Everything runs on the board itself: animated eyes, a mood engine, touch reactions, life and lifecycle stats, on-screen Wi-Fi setup and a phrase bank on the SD card.',
+      links: [{ t: 'Download firmware', u: R + 'CYD-Buddy/releases/latest', go: 1 }, { t: 'Source', u: R + 'CYD-Buddy' }] },
+
+    { name: 'Sullivan Connect', k: 'SHOP · DISCORD BOT', pf: ['discord'], th: { a: '#ff7a18', b: '#5865f2' }, motif: 'clock',
+      desc: 'Your trusty shop companion — a Discord bot built for the technicians at an auto shop, streamlining the day-to-day of the location.',
+      use: 'Runs the shop from Discord: inventory and restock, plus a team points system that turns the work week into a friendly competition.',
+      feats: ['<b>Full inventory and restock</b> system', '<b>Interactive "Team" point system</b>', '<b>Built for technicians</b> on the shop floor', 'Private bot — no public link'],
+      links: [] },
+
+    // ---- in the workshop ----
+    { name: 'CAK3D-Creations Shop', k: 'STORE · E-COMMERCE', pf: ['web'], th: { a: '#e9b949', b: '#8fbf6a' }, motif: 'dots', wip: true,
+      desc: 'The CAK3D-Creations storefront — the business side of the workshop, being built into an online shop for CAK3D builds and gear.',
+      use: 'The future home for buying CAK3D builds and gear. For now it is the business and portfolio site for the workshop.',
+      feats: ['<b>Online shop</b> in the works', '<b>Business portfolio</b> for active CAK3D projects', '<b>Hosted on Vercel</b>, separate from the main site'],
+      links: [{ t: 'Visit', u: 'https://cak3d-creations.vercel.app', go: 1 }, { t: 'Source', u: R + 'CAK3D-Creations' }] },
+
+    { name: 'Onstell', k: 'SOFTWARE KVM · DESKTOP', pf: ['windows', 'mac', 'linux'], th: { a: '#8ab4ff', b: '#c7a6ff' }, motif: 'computer', wip: true,
+      desc: 'A cross-platform software KVM in early development — make several computers feel like one desk, with the pointer, keyboard and clipboard following whichever screen you are on.',
+      use: 'Line up your machines and move between them like one big display — each computer keeps its own OS and apps. The floating desktop widget is in beta; the device-to-device backend is still being built.',
+      feats: ['<b>Device Desktop mode</b> — shared pointer, keyboard and clipboard between machines', '<b>Floating glass widget</b> with opacity, lock and layer controls', '<b>Windows, macOS and Linux</b> beta builds', '<b>Virtual Monitor mode</b> planned for later'],
+      links: [{ t: 'Beta builds', u: R + 'Onstell/releases', go: 1 }, { t: 'Source', u: R + 'Onstell' }] },
+
+    { name: 'CAK3DBot', k: 'DISCORD BOT · DAYZ', pf: ['discord'], th: { a: '#5865f2', b: '#f2ec50' }, motif: 'tech', wip: true,
+      desc: 'A Discord server bot for the ꧁ᙃᥲყ Z ᙅᗣҜӠᙃ꧂ Discord and DayZ servers. Livonia and Sakhal are up and running, with Chernarus on the way.',
+      use: 'Keeps the Days of Z community and its DayZ servers connected — inventory, socials, users and database tools, all from Discord.',
+      feats: ['<b>DayZ server support</b> — Livonia and Sakhal live, Chernarus next', '<b>Inventory, socials and user commands</b>', '<b>Node.js + Discord.js</b> with MongoDB'],
+      links: [{ t: 'Join the Discord', u: 'https://discord.gg/6NFd2cx9KU', go: 1 }, { t: 'Source', u: R + 'CAK3DBot' }] },
+
+    { name: 'Inventory App', k: 'SHOP · TEAM', pf: ['android', 'web'], th: { a: '#ff7a18', b: '#4f9dff' }, motif: 'clock', wip: true,
+      desc: 'A shop-floor team app in the works — inventory and restock, chores and schedules, service reports and safety, plus achievements and prizes to keep the crew going.',
+      use: 'One app for running the shop crew: what is in stock, who is on what, service reports, safety and messages, with a points-and-prizes layer on top.',
+      feats: ['<b>Inventory + restock requests</b>', '<b>Chores, schedules and objectives</b>', '<b>Service reports and safety</b>', '<b>Achievements and prizes</b> for the team'],
+      links: [] },
+
+    { name: 'Sullivan Connect App', k: 'SHOP · TEAM APP', pf: ['android', 'web'], th: { a: '#ff7a18', b: '#ffc24d' }, motif: 'clock', wip: true,
+      desc: 'Sullivan Connect, grown from a Discord bot into a full app — inventory and employee management for the workplace, on phone or browser.',
+      use: 'Takes the shop-companion bot off Discord and into its own app: stock, restock and the crew in one place.',
+      feats: ['<b>Inventory management</b> for the shop', '<b>Employee management</b> for the crew', '<b>Phone or browser</b> from one codebase'],
+      links: [{ t: 'Source', u: R + 'SullivanConnect-App', go: 1 }] },
   ];
 
   // Stable URL slug for a build's own page (app.html?id=slug).
-  const slug = (name) => String(name).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  // Accents are folded first, so "Pokédex" becomes "pokedex" rather than "pok-dex".
+  const slug = (name) => String(name).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
-  PROJECTS.forEach((p) => { p.cat = CATMAP[p.name] || 'tools'; p.slug = slug(p.name); });
+  // Source-code links aren't shown on the site. The repo name is kept on `repo`
+  // so the Observatory can still track the build's downloads and traffic.
+  PROJECTS.forEach((p) => {
+    p.cat = CATMAP[p.name] || 'tools';
+    p.slug = slug(p.name);
+    const src = p.links.find((l) => l.t === 'Source');
+    if (src) p.repo = src.u.slice(R.length).split('/')[0];
+    p.links = p.links.filter((l) => l.t !== 'Source');
+  });
 
   window.CAK3D = { R, PF, CATS, CATMAP, PROJECTS, slug };
 })();
