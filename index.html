@@ -100,6 +100,10 @@
   .card .tag{font-family:var(--mono);font-size:11px;color:var(--amber)}
   .card.soon{opacity:.72}
   .card.soon .tag{color:var(--muted)}
+  .card.wip{border-style:dashed;background:linear-gradient(180deg,var(--panel),var(--panel2))}
+  .card.wip:hover{border-color:var(--amber)}
+  .wipb{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1px;color:#120d02;
+    background:repeating-linear-gradient(135deg,var(--amber) 0 8px,#d99a12 8px 16px);padding:3px 8px;border-radius:6px;margin-bottom:8px;align-self:flex-start}
   .card h3{margin:8px 0 6px;font-size:19px}
   .card p{margin:0;color:var(--muted);font-size:14px}
   .card{display:flex;flex-direction:column}
@@ -360,30 +364,26 @@
   const {R,PF,CATS,CATMAP,PROJECTS,slug}=window.CAK3D;
   const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const pill=k=>{const m=PF[k];return `<span class="pf" style="color:${m.c};border-color:${m.c}55"><i style="background:${m.c}"></i>${m.l}</span>`};
-  // Direct .apk URLs by repo, filled in by the lookup below; the detail modal reuses them.
-  const apkUrls={};
-  const actsHtml=p=>p.links.map(l=>{
-    const repo=l.apk?l.u.replace('https://github.com/','').replace('/releases/latest',''):null;
-    if(repo&&apkUrls[repo]) return `<a class="alink${l.go?' go':''}" href="${apkUrls[repo]}" rel="nofollow">${esc(l.t)}</a>`;
-    const apk=repo?` data-apk-latest="${repo}"`:'';
-    return `<a class="alink${l.go?' go':''}" href="${l.u}" target="_blank" rel="noopener"${apk}>${esc(l.t)}</a>`;
-  }).join('');
+  // Cards and the quick-view popup carry no download/open buttons: every build's
+  // downloads, installs and flashing live on its full app page (app.html).
   document.getElementById('grid').innerHTML=PROJECTS.map((p,i)=>{
     const pfs=p.pf.map(pill).join('');
-    return `<div class="card" data-i="${i}" data-cat="${p.cat}" tabindex="0" role="button" aria-label="Details for ${esc(p.name)}"><h3><span class="k">${esc(p.k)}</span>${esc(p.name)}</h3><div class="pfs">${pfs}</div><p class="desc">${esc(p.desc)}</p><div class="acts">${actsHtml(p)}</div><div class="more">▸ tap for details</div></div>`;
+    const wip=p.wip?'<span class="wipb">⚒ WORK IN PROGRESS</span>':'';
+    return `<div class="card${p.wip?' wip':''}" data-i="${i}" data-cat="${p.cat}" tabindex="0" role="button" aria-label="Details for ${esc(p.name)}">${wip}<h3><span class="k">${esc(p.k)}</span>${esc(p.name)}</h3><div class="pfs">${pfs}</div><p class="desc">${esc(p.desc)}</p><div class="more">▸ tap for details</div></div>`;
   }).join('');
   document.getElementById('legend').innerHTML='<span>Runs on:</span> '+Object.keys(PF).map(pill).join('')
     +' <span>· Web runs in any phone or desktop browser, iPhone included.</span>';
 
   // --- category tabs / filtering ---
-  const count=id=>id==='all'?PROJECTS.length:PROJECTS.filter(p=>p.cat===id).length;
+  const inTab=(p,id)=>id==='all'||(id==='wip'?!!p.wip:p.cat===id);
+  const count=id=>PROJECTS.filter(p=>inTab(p,id)).length;
   const tabsEl=document.getElementById('tabs');
   tabsEl.innerHTML=CATS.map((c,i)=>
     `<button class="tab${i===0?' on':''}" role="tab" aria-selected="${i===0}" data-cat="${c.id}">${esc(c.l)} <span class="n">${count(c.id)}</span></button>`
   ).join('');
   function filter(cat){
     for(const card of document.querySelectorAll('#grid .card'))
-      card.style.display=(cat==='all'||card.dataset.cat===cat)?'':'none';
+      card.style.display=inTab(PROJECTS[+card.dataset.i],cat)?'':'none';
     for(const b of tabsEl.querySelectorAll('.tab')){
       const on=b.dataset.cat===cat; b.classList.toggle('on',on); b.setAttribute('aria-selected',on);
     }
@@ -396,21 +396,20 @@
     const pfs=p.pf.map(pill).join('');
     const feats=(p.feats||[]).map(f=>`<li>${f}</li>`).join('');
     mbody.innerHTML=
+      (p.wip?'<span class="wipb">⚒ WORK IN PROGRESS</span>':'')+
       `<div class="mk">${esc(p.k)}</div>`+
       `<h2 class="mtitle" id="mtitle">${esc(p.name)}</h2>`+
       `<div class="pfs">${pfs}</div>`+
       `<p class="mlead">${esc(p.desc)}</p>`+
       (p.use?`<div class="muse"><span class="lbl">WHAT IT'S FOR</span><p>${esc(p.use)}</p></div>`:'')+
       (feats?`<ul class="mfeat">${feats}</ul>`:'')+
-      `<a class="mpage" href="app.html?id=${encodeURIComponent(p.slug)}">▸ View full app page</a>`+
-      `<div class="acts">${actsHtml(p)}</div>`;
+      `<a class="mpage" href="app.html?id=${encodeURIComponent(p.slug)}">▸ View full app page${p.links.length?' to download &amp; install':''}</a>`;
     ovl.classList.add('open'); ovl.setAttribute('aria-hidden','false');
     document.body.style.overflow='hidden';
     document.getElementById('mclose').focus();
   }
   function closeModal(){ ovl.classList.remove('open'); ovl.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
   document.getElementById('grid').addEventListener('click',e=>{
-    if(e.target.closest('.acts')) return;            // let real links do their thing
     const card=e.target.closest('.card'); if(!card) return;
     openModal(PROJECTS[+card.dataset.i]);
   });
@@ -422,27 +421,6 @@
   document.getElementById('mclose').addEventListener('click',closeModal);
   ovl.addEventListener('click',e=>{ if(e.target===ovl) closeModal(); });
   addEventListener('keydown',e=>{ if(e.key==='Escape'&&ovl.classList.contains('open')) closeModal(); });
-
-  // Point every "APK" button straight at the latest release's .apk asset, so a tap on
-  // a phone downloads the file instead of landing on GitHub's release page (where the
-  // APK is hidden in a collapsed "Assets" list). Public repos only; on any failure the
-  // button keeps its releases/latest page as a fallback.
-  (async()=>{
-    for(const a of document.querySelectorAll('[data-apk-latest]')){
-      const repo=a.getAttribute('data-apk-latest');
-      try{
-        const r=await fetch(`https://api.github.com/repos/${repo}/releases/latest`,{headers:{Accept:'application/vnd.github+json'}});
-        if(!r.ok) continue;
-        const j=await r.json();
-        const apk=(j.assets||[]).find(x=>/\.apk$/i.test(x.name));
-        // A plain link, exactly like the asset link on GitHub's release page. No `download`
-        // attribute: on Chrome for Android, `download` on a cross-origin link that redirects
-        // (github.com → release-assets.githubusercontent.com) leaves the download stuck at the
-        // end. GitHub's own Content-Disposition header already makes it a download.
-        if(apk&&apk.browser_download_url){ apkUrls[repo]=apk.browser_download_url; a.href=apk.browser_download_url; a.removeAttribute('download'); a.removeAttribute('target'); a.rel='nofollow'; }
-      }catch{}
-    }
-  })();
 })();
 </script>
 </body>

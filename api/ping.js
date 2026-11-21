@@ -6,7 +6,7 @@
 // (an approximate unique counter), so it can't be read back out.
 const { connected, appSlugs, pipeline, cors, day } = require('./_kv');
 
-const PLATFORMS = new Set(['web', 'android', 'windows', 'pi', 'esp32']);
+const PLATFORMS = new Set(['web', 'android', 'windows', 'mac', 'linux', 'pi', 'esp32']);
 const TTL = 100 * 86400; // keep daily keys ~100 days
 const clean = (v, re, max) => (typeof v === 'string' && v.length <= max && re.test(v) ? v : null);
 

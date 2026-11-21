@@ -242,7 +242,7 @@
       <div class="board">${esc(f.board)}</div>
       ${chip}
       <p class="desc">${esc(f.desc)}</p>
-      <div class="flashrow">${flash}${f.dl?`<a class="src" href="${esc(f.dl)}" download>⬇ Download</a>`:''}<a class="src" href="${esc(f.src)}" target="_blank" rel="noopener">Source ↗</a></div>
+      <div class="flashrow">${flash}${f.dl?`<a class="src" href="${esc(f.dl)}" download>⬇ Download</a>`:''}</div>
     </div>`;
   }).join('');
 })();
@@ -269,7 +269,6 @@
       <p>${esc(p.desc)}</p>
       <div class="flashrow">
         <a class="btn go" href="${esc(p.img)}" target="_blank" rel="noopener" style="text-decoration:none">⬇ Get image</a>
-        <a class="src" href="${esc(p.src)}" target="_blank" rel="noopener">Source ↗</a>
       </div>
     </div>`).join('');
 })();

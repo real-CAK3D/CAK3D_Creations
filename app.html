@@ -44,6 +44,8 @@
     radial-gradient(640px 280px at 8% -10%,color-mix(in srgb,var(--a) 26%,transparent),transparent 62%),
     radial-gradient(560px 280px at 98% 0%,color-mix(in srgb,var(--b) 22%,transparent),transparent 60%)}
   .kicker{font-family:var(--mono);font-size:12px;letter-spacing:3px;color:var(--a);opacity:.95}
+  .wipb{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:1px;color:#120d02;
+    background:repeating-linear-gradient(135deg,#f0b429 0 8px,#d99a12 8px 16px);padding:4px 10px;border-radius:6px;margin-bottom:12px}
   .htitle{font-size:clamp(36px,9vw,84px);line-height:.98;margin:12px 0 10px;font-weight:700;letter-spacing:-1.5px;
     background:linear-gradient(92deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent;
     overflow-wrap:break-word;word-break:break-word}
@@ -148,6 +150,7 @@
 
   main.innerHTML=
     `<div class="hero">`+
+      (p.wip?'<span class="wipb">⚒ WORK IN PROGRESS</span>':'')+
       `<div class="kicker mono">// ${esc(p.k)}</div>`+
       `<h1 class="htitle">${esc(p.name)}</h1>`+
       `<p class="lead">${esc(p.desc)}</p>`+
@@ -159,7 +162,9 @@
     `</div>`+
     (p.use?`<section><div class="eyebrow mono">// WHAT IT'S FOR</div><div class="panel"><p class="use">${esc(p.use)}</p>${p.long?`<p class="long">${esc(p.long)}</p>`:''}</div></section>`:'')+
     (feats?`<section><div class="eyebrow mono">// WHAT'S INSIDE</div><h2>Features</h2><ul class="feat">${feats}</ul></section>`:'')+
-    `<section><div class="eyebrow mono">// GET IT</div><h2>Download & links</h2><div class="dl">${p.links.map(dlCard).join('')}</div></section>`;
+    `<section><div class="eyebrow mono">// GET IT</div><h2>Download & links</h2>`+
+      (p.links.length?`<div class="dl">${p.links.map(dlCard).join('')}</div>`:`<div class="panel"><p class="use">${p.wip?'Still in the workshop — no public download yet.':'No public download for this build yet.'}</p></div>`)+
+    `</section>`;
 
   startBg(a,b,p.motif||'dots');
 
