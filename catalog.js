@@ -30,7 +30,7 @@
   ];
 
   const CATMAP = {
-    'Flocked Up': 'rf', 'Flying Flocks': 'rf', 'What the Flock!': 'rf', 'MaurCAK3D': 'rf', 'Spac3-Gh0st': 'rf', 'Hu-Motian': 'rf',
+    'Flocked Up': 'rf', 'Flying Flocks': 'rf', 'What the Flock!': 'rf', 'MaurCAK3D': 'rf', 'Spac3-Gh0st': 'rf', 'Hu-Motian': 'rf', 'CAK3Dvision': 'rf',
     'Shelf & Stock': 'tools', 'Home Inventory': 'tools', 'MapPI3': 'tools', 'TorqueClock': 'tools', 'GTA-Watch': 'tools',
     'Scanimal': 'play', 'Pokédex': 'play', 'CYD Buddy': 'play',
     'Foldman': 'media', 'Classipod': 'media', 'NostalgiaVue': 'media', 'The Corner Chronicle': 'media',
@@ -108,6 +108,13 @@
       use: 'Point a mmWave sensor at a room and watch a live 3D twin — figures stand, sit and lie down where real people are, no camera involved.',
       feats: ['<b>24 GHz mmWave</b> presence sensing on an ESP32', '<b>Live 3D room</b> in the browser', '<b>Jointed figures</b> that walk, sit and lie down', '<b>Camera-free</b> — motion, not video'],
       links: [{ t: 'Open', u: 'https://hu-motian.vercel.app', go: 1 }, { t: 'Firmware', u: R + 'Hu-Motian/releases/latest' }, { t: 'Source', u: R + 'Hu-Motian' }] },
+
+    { name: 'CAK3Dvision', k: 'GLOBE · SPATIAL INTEL', pf: ['web', 'windows'], th: { a: '#4fe3ff', b: '#f0a63c' }, motif: 'space',
+      desc: 'A spy-satellite view of the planet with real data — flights, ships, satellites, weather, quakes and public cameras on a photorealistic 3D globe. CAK3D\'s home-hosted build of God\'s Eye View.',
+      use: 'Runs on the home PC and opens on the phone over a private Tailscale link: click any plane, ship or satellite to track it, flip on FLIR or night vision, or ask the globe a question out loud.',
+      feats: ['<b>Live layers</b> — flights, ships, satellites, weather radar, quakes, fires and public cameras', '<b>Click-to-track</b> anything, ride along in cockpit view, and reskin the world as FLIR, NVG or CRT', '<b>SDR support</b> — plot what your own radio picks up', '<b>Phone access over Tailscale</b> with private HTTPS, mic and voice included', '<b>API usage dashboard</b> with daily and monthly caps that hard-stop calls before they get billed', '<b>Windows launcher</b> — Start / Stop desktop icons, no console window'],
+      long: 'CAK3Dvision is CAK3D\'s build of God\'s Eye View, the open-source live 3D globe that fuses public signals (flight transponders, ship beacons, orbital data, weather and public cameras) into one explorable picture. This build is set up to live on a home PC and be used from a phone: private HTTPS over Tailscale, a usage dashboard that keeps every API key under its quota, and one-click Windows start and stop icons. God\'s Eye View is a trademark of Metaversity LLC; this build is based on bilawalsidhu/gods-eye-view.',
+      links: [{ t: 'Release', u: R + 'CAK3Dvision/releases/latest', go: 1 }, { t: 'Original', u: 'https://github.com/bilawalsidhu/gods-eye-view' }, { t: 'Source', u: R + 'CAK3Dvision' }] },
 
     { name: 'NostalgiaVue', k: 'RETRO · MEDIA', pf: ['web', 'windows'], th: { a: '#63ff6e', b: '#ffd23f' }, motif: 'tv',
       desc: 'A 1980s–2000s TV set in your browser — remote, channel guide, static and 770+ channels surfing archive.org, YouTube and your own clips.',
